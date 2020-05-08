@@ -6,26 +6,26 @@ template = "index.html"
 +++
 
 <img id="logo" src="logo.png" alt="Ferris holding a cheat sheet."></img>
-<div class="title">Rust Language Cheat Sheet</div>
+<div class="title">Rust 语言备忘清单</div>
 <div class="subtitle">{{ date() }}</div>
 
 
 
 > Contains clickable links to
-> **The Book** {{ book(page="") }},
+> **Rust 程序设计语言** {{ book(page="") }},
 > **Rust by Example** {{ ex(page="") }},
-> **Std Docs** {{ std(page="std") }},
-> **Nomicon** {{ nom(page="") }},
-> **Reference** {{ ref(page="") }}.
+> **标准库文档** {{ std(page="std") }},
+> **Rust 黑魔法** {{ nom(page="") }},
+> **Rust 参考手册** {{ ref(page="") }}.
 > Other symbols used:
-> largely **deprecated** {{ deprecated() }},
-> has a **minimum edition** {{ edition(ed="'18") }},
+> largely **废弃** {{ deprecated() }},
+> has a **最低版本** {{ edition(ed="'18") }},
 > is **work in progress** {{ experimental() }},
 > or **bad** {{ bad() }}.
 
 <div class="controls">
-    <a id="toggle_ligatures" href="javascript:toggle_ligatures()">Fira Code Ligatures (<code>..=, =></code>)</a>
-    <a href="javascript:toggle_night_mode()">Night Mode &#x1f4a1;</a>
+    <a id="toggle_ligatures" href="javascript:toggle_ligatures()">Fira Code 连字 (<code>..=, =></code>)</a>
+    <a href="javascript:toggle_night_mode()">暗色模式 &#x1f4a1;</a>
 </div>
 
 <div class="noprint">
@@ -34,30 +34,30 @@ template = "index.html"
 
 <div class="column">
 
-**Language Constructs**
-* [Data Structures](#data-structures)
-* [References & Pointers](#references-pointers)
-* [Functions & Behavior](#functions-behavior)
-* [Control Flow](#control-flow)
-* [Organizing Code](#organizing-code)
-* [Type Aliases and Casts](#type-aliases-and-casts)
-* [Macros & Attributes](#macros-attributes)
-* [Pattern Matching](#pattern-matching)
-* [Generics & Constraints](#generics-constraints)
-* [Strings & Chars](#strings-chars)
-* [Comments](#comments)
-* [Miscellaneous](#miscellaneous)
+**语言**
+* [数据结构](#data-structures)
+* [引用 & 指针](#references-pointers)
+* [函数 & 行为](#functions-behavior)
+* [控制流程](#control-flow)
+* [代码组织](#organizing-code)
+* [类型别名和转换](#type-aliases-and-casts)
+* [宏 & 属性](#macros-attributes)
+* [模式匹配](#pattern-matching)
+* [泛型 & 约束](#generics-constraints)
+* [字符串 & 字符](#strings-chars)
+* [注释](#comments)
+* [杂项](#miscellaneous)
 
-**Behind the Scenes**
-* [Language Sugar](#language-sugar)
+**幕后**
+* [语法糖](#language-sugar)
 
 
-**Data & Types**
-* [Basic Types](#basic-types)
-* [Custom Types](#custom-types)
-* [References & Pointers](#references-pointers-ui)
-* [Closures](#closures-data)
-* [Standard Library Types](#standard-library-types)
+**数据类型**
+* [基本类型](#basic-types)
+* [自定义类型](#custom-types)
+* [引用 & 指针s](#references-pointers-ui)
+* [闭包](#closures-data)
+* [标准库类型](#standard-library-types)
 
 
 
@@ -66,31 +66,31 @@ template = "index.html"
 
 <div class="column">
 
-**Standard Library**
+**标准库**
 * [Traits](#traits)
-* [String Conversions](#string-conversions)
-* [String Formatting](#string-formatting)
+* [字符串转换](#string-conversions)
+* [字符串格式化](#string-formatting)
 <!-- * [Marker Traits](#XXX) -->
 
 
-**Tooling**
+**工具**
 * [Project Anatomy](#project-anatomy)
 * [Cargo](#cargo)
-* [Cross Compilation](#cross-compilation)
+* [交叉编译](#cross-compilation)
 
 
-**Coding Guides**
+**编码指南**
 * [Idiomatic Rust](#idiomatic-rust)
 * [Async-Await 101](#async-await-101)
-* [Closures in APIs](#closures-in-apis)
-* [Reading Lifetimes](#reading-lifetimes)
+* [闭包 in APIs](#closures-in-apis)
+* [理解生命周期](#reading-lifetimes)
 * [Unsafe, Unsound, Undefined](#unsafe-unsound-undefined)
 * [API Stability](#api-stability)
 
 
-**Misc**
-* [Links & Services](#links-services)
-* [Printing & PDF](#printing-pdf)
+**杂项**
+* [链接 & 服务](#links-services)
+* [打印 & PDF](#printing-pdf)
 
 
 </div>
@@ -103,7 +103,7 @@ template = "index.html"
 
 <div class="noprint">
 
-## Hello, Rust!
+## 你好, Rust!
 
 If you have never seen Rust before, or if you want to try the things below:
 
@@ -119,29 +119,29 @@ fn main() {
 
 </div>
 <div id="helloplay"></div>
-<div id="helloctrl"><a href="javascript:show_playground(true);">▶️ Edit & Run</a></div>
+<div id="helloctrl"><a href="javascript:show_playground(true);">▶️ 编辑 & 运行</a></div>
 
 </div>
 
 
-### Data Structures
+### 数据结构
 
 Data types and memory locations defined via keywords.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
-| `struct S {}` | Define a **struct** {{ book(page="ch05-00-structs.html") }} {{ ex(page="custom_types/structs.html") }} {{ std(page="std/keyword.struct.html") }} {{ ref(page="expressions/struct-expr.html") }} with named fields. |
-| {{ tab() }} `struct S { x: T }` | Define struct with named field `x` of type `T`. |
-| {{ tab() }} `struct S` &#8203;`(T);` | Define "tupled" struct with numbered field `.0` of type `T`. |
-| {{ tab() }} `struct S;` | Define **zero sized** {{ nom(page="exotic-sizes.html#zero-sized-types-zsts")}} unit struct. Occupies no space, optimized away. |
-| `enum E {}` | Define an **enum** {{ book(page="ch06-01-defining-an-enum.html") }} {{ ex(page="custom_types/enum.html#enums") }} {{ ref(page="items/enumerations.html") }} , _c_. [algebraic data types](https://en.wikipedia.org/wiki/Algebraic_data_type), [tagged unions](https://en.wikipedia.org/wiki/Tagged_union). |
+| `struct S {}` | 定义包含命名字段的 **结构体** {{ book(page="ch05-00-structs.html") }} {{ ex(page="custom_types/structs.html") }} {{ std(page="std/keyword.struct.html") }} {{ ref(page="expressions/struct-expr.html") }} . |
+| {{ tab() }} `struct S { x: T }` | 定义包含 `T` 类型命名字段 `x` 的结构体. |
+| {{ tab() }} `struct S` &#8203;`(T);` | 定义 `T` 类型数字字段 `.0` 的「元组」结构体. |
+| {{ tab() }} `struct S;` | 定义一个 **零大小** {{ nom(page="exotic-sizes.html#zero-sized-types-zsts")}} 单位的结构体. 不占空间. |
+| `enum E {}` | 定义 **枚举** {{ book(page="ch06-01-defining-an-enum.html") }} {{ ex(page="custom_types/enum.html#enums") }} {{ ref(page="items/enumerations.html") }}, _见_ [数字数据类型](https://en.wikipedia.org/wiki/Algebraic_data_type), [标签联合](https://en.wikipedia.org/wiki/Tagged_union). |
 | {{ tab() }}  `enum E { A, B`&#8203;`(), C {} }` | Define variants of enum; can be unit- `A`, tuple- `B` &#8203;`()` and struct-like `C{}`. |
 | {{ tab() }}  `enum E { A = 1 }` | If variants are only unit-like, allow discriminant values, e.g., for FFI. |
-| `union U {}` | Unsafe C-like **union**  {{ ref(page="items/unions.html") }} for FFI compatibility. |
-| `static X: T = T();`  | **Global variable** {{ book(page="ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable") }} {{ ex(page="custom_types/constants.html#constants") }} {{ ref(page="items/static-items.html#static-items") }}  with `'static` lifetime, single memory location. |
-| `const X: T = T();`  | Defines **constant** {{ book(page="ch03-01-variables-and-mutability.html#differences-between-variables-and-constants") }} {{ ex(page="custom_types/constants.html") }} {{ ref(page="items/constant-items.html") }}. Copied into a temporary when used. |
+| `union U {}` | 不安全的 C 风格 **联合体**{{ ref(page="items/unions.html") }}, 用于 FFI 兼容. |
+| `static X: T = T();`  | 有 `'static` 生命周期的 **全局变量** {{ book(page="ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable") }} {{ ex(page="custom_types/constants.html#constants") }} {{ ref(page="items/static-items.html#static-items") }} , 独立内存位置. |
+| `const X: T = T();`  | 定义 **常量** {{ book(page="ch03-01-variables-and-mutability.html#differences-between-variables-and-constants") }} {{ ex(page="custom_types/constants.html") }} {{ ref(page="items/constant-items.html") }}. 使用时会临时复制一份. |
 | `let x: T;`  | Allocate `T` bytes on stack {{ note( note="1") }} bound as `x`. Assignable once, not mutable.  |
 | `let mut x: T;`  | Like `let`, but allow for mutability and mutable borrow. {{ note( note="2") }} |
 | {{ tab() }} `x = y;` | Moves `y` to `x`, invalidating `y` if `T` is not `Copy`, and copying `y` otherwise. |
@@ -162,7 +162,7 @@ Creating and accessing data structures; and some more _sigilic_ types.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `S { x: y }` | Create `struct S {}` or `use`'ed `enum E::S {}` with field `x` set to `y`. |
 | `S { x }` | Same, but use local variable `x` for field `x`. |
@@ -184,8 +184,8 @@ Creating and accessing data structures; and some more _sigilic_ types.
 | `x[a..]` | Collection slice-like indexing via [RangeFrom](https://doc.rust-lang.org/std/ops/struct.RangeFrom.html). |
 | `x[..b]` | Collection slice-like indexing [RangeTo](https://doc.rust-lang.org/std/ops/struct.RangeTo.html). |
 | `x[a..b]` | Collection slice-like indexing via [Range](https://doc.rust-lang.org/std/ops/struct.Range.html). |
-| `a..b` | Right-exclusive **range** {{ ref(page="expressions/range-expr.html") }} creation, also seen as `..b`.  |
-| `a..=b` | Inclusive range creation, also seen as `..=b`. |
+| `a..b` | 左闭右开 **区间** {{ ref(page="expressions/range-expr.html") }} , `..b` 同理.  |
+| `a..=b` | 闭区间, `..=b` 同理. |
 | `s.x` | Named **field access**, {{ ref(page="expressions/field-expr.html") }} might try to [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) if `x` not part of type `S`. |
 | `s.0` | Numbered field access, used for tuple types `S` &#8203;`(T)`. |
 
@@ -198,14 +198,14 @@ Creating and accessing data structures; and some more _sigilic_ types.
 </div>
 
 
-### References & Pointers
+### 引用 & 指针
 
 Granting access to un-owned memory. Also see section on Generics & Constraints.
 
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `&S` | Shared **reference** {{ book(page="ch04-02-references-and-borrowing.html") }} {{ std(page="std/primitive.reference.html") }} {{ nom(page="references.html")}} {{ ref(page="types.html#pointer-types")}} (space for holding _any_ `&s`). |
 | {{ tab() }} `&[S]` | Special slice reference that contains (`address`, `length`). |
@@ -234,18 +234,18 @@ Granting access to un-owned memory. Also see section on Generics & Constraints.
 
 
 
-###  Functions & Behavior
+###  函数 & 行为
 
 Define units of code and their abstractions.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
-| `trait T {}`  | Define a **trait**; {{ book(page="ch10-02-traits.html") }} {{ ex(page="trait.html") }} {{ ref(page="items/traits.html") }} common behavior others can implement. |
+| `trait T {}`  | 定义 **trait**; {{ book(page="ch10-02-traits.html") }} {{ ex(page="trait.html") }} {{ ref(page="items/traits.html") }} 可被实现的通用行为. |
 | `trait T : R {}` | `T` is subtrait of **supertrait** {{ ref(page="items/traits.html#supertraits") }} `R`. Any `S` must `impl R` before it can `impl T`. |
-| `impl S {}`  | **Implementation** {{ ref(page="items/implementations.html") }} of functionality for a type `S`, e.g., methods. |
-| `impl T for S {}`  | Implement trait `T` for type `S`. |
+| `impl S {}`  | 类型 `S` 的函数 **实现** {{ ref(page="items/implementations.html") }} , 如方法. |
+| `impl T for S {}`  | 为类型 `S` 实现 trait `T`. |
 | `impl !T for S {}` | Disable an automatically derived **auto trait** {{ nom(page="send-and-sync.html") }} {{ ref(page="special-types-and-traits.html#auto-traits") }}. |
 | `fn f() {}`  | Definition of a **function** {{ book(page="ch03-03-how-functions-work.html") }}  {{ ex(page="fn.html") }} {{ ref(page="items/functions.html") }}; or associated function if inside `impl`. |
 | {{ tab() }} `fn f() -> S {}`  | Same, returning a value of type S. |
@@ -254,25 +254,25 @@ Define units of code and their abstractions.
 | `async fn f() {}`  | **Async**  {{ edition(ed="'18") }} function transformation, makes `f` return an `impl Future`. {{ std(page="std/future/trait.Future.html") }} |
 | {{ tab() }} `async fn f() -> S {}`  | Same, but make `f` return an `impl Future<Output=S>`. |
 | {{ tab() }} `async { x }`  | Used within a function, make `{ x }` an `impl Future<Output=X>`. |
-| `fn() -> S`  | **Function pointers**, {{ book(page="ch19-05-advanced-functions-and-closures.html#function-pointers") }} {{ std(page="std/primitive.fn.html") }} {{ ref(page="types.html#function-pointer-types") }}, memory holding address of a callable. |
-| `Fn() -> S`  | **Callable Trait**, {{ book(page="ch19-05-advanced-functions-and-closures.html#returning-closures") }} {{ std(page="std/ops/trait.Fn.html") }} (also `FnMut`, `FnOnce`), implemented by closures, fn's ... |
-| <code>&vert;&vert; {} </code> | A **closure** {{ book(page="ch13-01-closures.html") }} {{ ex(page="fn/closures.html") }} {{ ref(page="expressions/closure-expr.html")}} that borrows its captures. |
+| `fn() -> S`  | **Function pointers**, {{ book(page="ch19-05-advanced-functions-and-闭包.html#function-pointers") }} {{ std(page="std/primitive.fn.html") }} {{ ref(page="types.html#function-pointer-types") }}, memory holding address of a callable. |
+| `Fn() -> S`  | **Callable Trait**, {{ book(page="ch19-05-advanced-functions-and-闭包.html#returning-闭包") }} {{ std(page="std/ops/trait.Fn.html") }} (also `FnMut`, `FnOnce`), implemented by 闭包, fn's ... |
+| <code>&vert;&vert; {} </code> | A **closure** {{ book(page="ch13-01-闭包.html") }} {{ ex(page="fn/闭包.html") }} {{ ref(page="expressions/closure-expr.html")}} that borrows its captures. |
 | {{ tab() }} <code>&vert;x&vert; {}</code> | Closure with a bound parameter `x`. |
 | {{ tab() }} <code>&vert;x&vert; x + x</code> | Closure without block expression; may only consist of single expression.  |
 | {{ tab() }} <code>move &vert;x&vert; x + y </code> | Closure taking ownership of its captures. |
-| {{ tab() }} <code> return &vert;&vert; true </code> | Closures sometimes look like logical ORs (here: return a closure). |
+| {{ tab() }} <code> return &vert;&vert; true </code> | 闭包 sometimes look like logical ORs (here: return a closure). |
 | `unsafe {}` | If you enjoy debugging segfaults Friday night; **unsafe code**. {{ book(page="ch19-01-unsafe-rust.html?highlight=unsafe#unsafe-superpowers") }} {{ ex(page="unsafe.html#unsafe-operations") }} {{ nom(page="meet-safe-and-unsafe.html") }} {{ ref(page="unsafe-blocks.html#unsafe-blocks") }} |
 
 </div>
 
 
-### Control Flow
+### 控制流程
 
 Control execution within a function.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `while x {}`  | **Loop** {{ ref(page="expressions/loop-expr.html#predicate-loops") }}, run while expression `x` is true. |
 | `loop {}`  | **Loop infinitely** {{ ref(page="expressions/loop-expr.html#infinite-loops") }} until `break`. Can yield value with `break x`. |
@@ -300,13 +300,13 @@ Control execution within a function.
 
 
 
-### Organizing Code
+### 代码组织
 
 Segment projects into smaller units and minimize dependencies.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `mod m {}`  | Define a **module** {{ book(page="ch07-02-defining-modules-to-control-scope-and-privacy.html") }} {{ ex(page="mod.html#modules") }} {{ ref(page="items/modules.html#modules") }}, get definition from inside `{}`. |
 | `mod m;`  | Define a module, get definition from `m.rs` or `m/mod.rs`. |
@@ -333,13 +333,13 @@ Segment projects into smaller units and minimize dependencies.
 
 
 
-### Type Aliases and Casts
+### 类型别名和转换
 
 Short-hand names of types, and methods to convert one type to another.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `type T = S;`  | Create a **type alias** {{ book(page="ch19-04-advanced-types.html#creating-type-synonyms-with-type-aliases") }} {{ ref(page="items/type-aliases.html?highlight=alias#type-aliases") }}, i.e., another name for `S`. |
 | `Self`  | Type alias for **implementing type** {{ ref(page="types.html#self-types") }}, e.g. `fn new() -> Self`. |
@@ -355,7 +355,7 @@ Short-hand names of types, and methods to convert one type to another.
 
 
 
-### Macros & Attributes
+### 宏 & 属性
 
 Code generation constructs expanded before the actual compilation happens.
 
@@ -401,14 +401,14 @@ In a `macro_rules!` implementation, the following macro captures can be used:
 
 
 
-### Pattern Matching
+### 模式匹配
 
 Constructs found in `match` or `let` expressions, or function parameters.
 
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `match m {}` | Initiate **pattern matching** {{ book(page="ch06-02-match.html") }} {{ ex(page="flow_control/match.html") }} {{ ref(page="expressions/match-expr.html") }}, then use match arms, _c_. next table. |
 | `let S(x) = get();`  | Notably, `let` also pattern matches similar to the table below. |
@@ -468,13 +468,13 @@ Pattern matching arms in `match` expressions. The left side of these arms can al
 
 
 
-### Generics & Constraints
+### 泛型 & 约束
 
 Generics combine with many other constructs such as `struct S<T>`, `fn f<T>()`, ...
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `S<T>`  | A **generic** {{ book(page="ch10-01-syntax.html") }} {{ ex(page="generics.html") }} type with a type parameter (`T` is placeholder name here). |
 | `S<T: R>`  | Type short hand **trait bound** {{ book(page="ch10-02-traits.html#using-trait-bounds-to-conditionally-implement-methods") }} {{ ex(page="generics/bounds.html") }} specification  (`R` _must_ be actual trait). |
@@ -506,14 +506,14 @@ Generics combine with many other constructs such as `struct S<T>`, `fn f<T>()`, 
 
 
 
-### Strings & Chars
+### 字符串 & 字符
 
 Rust has several ways to create string or char literals, depending on your needs.
 
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |--------|-------------|
 | `"..."` | **String literal**, {{ ref(page="tokens.html#string-literals")}} UTF-8, will interpret `\n` as _line break_ `0xA`, ... |
 | `r"..."`, | **Raw string literal**. {{ ref(page="tokens.html#raw-string-literals")}} UTF-8, won't interpret `\n`, ... |
@@ -526,13 +526,13 @@ Rust has several ways to create string or char literals, depending on your needs
 </div>
 
 
-### Comments
+### 注释
 
-No comment.
+无需解释。
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |--------|-------------|
 | `//` | Line comment, use these to document code flow or _internals_. |
 | `//!` | Inner line **doc comment** {{ book(page="ch14-02-publishing-to-crates-io.html#making-useful-documentation-comments") }} {{ ex(page="meta/doc.html#documentation") }} {{ ref(page="comments.html#doc-comments")}} for auto generated documentation. |
@@ -546,13 +546,13 @@ No comment.
 </div>
 
 
-### Miscellaneous
+### 杂项
 
 These sigils did not fit any other category but are good to know nonetheless.
 
 <div class="cheats">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `!` | Always empty **never type**. {{ experimental() }} {{ book(page="ch19-04-advanced-types.html#the-never-type-that-never-returns") }} {{ ex(page="fn/diverging.html#diverging-functions") }} {{ std(page="std/primitive.never.html") }} {{ ref(page="types.html?highlight=never#never-type") }} |
 | `_` | Unnamed variable binding, e.g., <code>&vert;x, _&vert; {}</code>.|
@@ -568,7 +568,7 @@ These sigils did not fit any other category but are good to know nonetheless.
 
 
 
-### Common Operators
+### 通用操作符
 
 Rust supports all common operators you would expect to find in a language (`+`, `*`, `%`, `=`, `==`...).
 Since they behave no differently in Rust we do not list them here.
@@ -578,9 +578,9 @@ For some of them Rust also supports **operator overloading**. {{ std(page="std/o
 
 <div class="magic">
 
-# Behind the Scenes
+# 幕后
 
-## Language Sugar
+## 语法糖
 
 If something works that "shouldn't work now that you think about it", it might be due to one of these.
 
@@ -611,17 +611,17 @@ If something works that "shouldn't work now that you think about it", it might b
 <!-- This whole section doesn't look good on print -->
 <div class="noprint">
 
-# Data & Types
+# 数据 & 类型
 
 Memory representations of common data types.
 
 
-## Basic Types
+## 基本类型
 
 Essential types built into the core of the language.
 
 
-#### Numeric Types {{ ref(page="types/numeric.html") }}
+#### 数字类型 {{ ref(page="types/numeric.html") }}
 
 <!-- NEW ENTRY -->
 <datum class="spaced">
@@ -915,7 +915,7 @@ Notice how:
 {{ tablesep() }}
 
 
-## Custom Types
+## 自定义类型
 
 Basic types definable by users. Actual <b>layout</b> {{ ref(page="type-layout.html") }} is subject to <b>representation</b>; {{ ref(page="type-layout.html#representations") }} padding can be present.
 
@@ -1060,7 +1060,7 @@ These **sum types** hold a value of one of their sub types:
 
 
 
-## References & Pointers {#references-pointers-ui}
+## 引用 & 指针s {#references-pointers-ui}
 
 References give safe access to other memory, raw pointers `unsafe` access.
 For some referents additional `payload` may be present (see below).
@@ -1238,7 +1238,7 @@ The `payload` depends on the base type of the referent. This applies to both ref
 
 
 
-## Closures {#closures-data}
+## 闭包 {#closures-data}
 
 A closure is an ad-hoc function that comes with an automatically managed data block **capturing** {{ ref(page="types/closure.html#capture-modes") }}
 the environment you accessed when defining the closure. For example:
@@ -1296,9 +1296,9 @@ the environment you accessed when defining the closure. For example:
 
 
 
-## Standard Library Types
+## 标准库类型
 
-Rust's standard library combines many of the above primitive types into useful types with special semantics.
+Rust's 标准库 combines many of the above primitive types into useful types with special semantics.
 Some common types:
 
 <!-- NEW ENTRY -->
@@ -1646,7 +1646,7 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
 </div>
 
 
-# Standard Library
+# 标准库
 
 <!-- <div class="wip"> -->
 
@@ -1779,7 +1779,7 @@ Conversions XXX
 
 
 
-## String Conversions
+## 字符串转换
 
 
 If you **want** a string of type ...
@@ -2053,7 +2053,7 @@ CString::new(bytes)?
 {{ tablesep() }}
 
 
-## String Formatting
+## 字符串格式化
 
 Formatting applies to `print!`, `eprint!`, `write!` (and their -`ln` siblings like `println!`).
 Each format argument is either empty `{}`, `{argument}`, or follows a basic [**syntax**](https://doc.rust-lang.org/std/fmt/index.html#syntax):
@@ -2085,7 +2085,7 @@ Each format argument is either empty `{}`, `{argument}`, or follows a basic [**s
 
 <div class="header-undefined-color-3">
 
-| Example | Explanation |
+| 示例 | 说明 |
 |---------|-------------|
 | `{:?}` | Print the next argument using Debug. |
 | `{2:#?}` | Pretty-print the 3rd argument with Debug formatting. |
@@ -2372,7 +2372,7 @@ A large number of additional cargo plugins [**can be found here**](https://crate
 {{ tablesep() }}
 
 
-## Cross Compilation
+## 交叉编译
 
 <!-- <div class="steps"> -->
 
@@ -2581,7 +2581,7 @@ without assuming executor specifics. <br/>
 {{ tablesep() }}
 
 
-## Closures in APIs
+## 闭包 in APIs
 
 There is a subtrait relationship `Fn` : `FnMut` : `FnOnce`. That means, a closure that
 implements `Fn`, also implements `FnMut` and `FnOnce`. Likewise, a closure
@@ -2626,7 +2626,7 @@ From the perspective of someone defining a closure:
 <div class="footnotes">
 
 <sup>*</sup> Rust [prefers capturing](https://doc.rust-lang.org/stable/reference/expressions/closure-expr.html) by reference
-(resulting in the most "compatible" `Fn` closures from a caller perspective), but can be
+(resulting in the most "compatible" `Fn` 闭包 from a caller perspective), but can be
 forced to capture its environment by copy or move via the
 `move || {}` syntax.
 
@@ -2650,7 +2650,7 @@ That gives the following advantages and disadvantages:
 {{ tablesep() }}
 
 
-## Reading Lifetimes
+## 理解生命周期
 
 Lifetimes can be overwhelming at times. Here is a simplified guide on how to read and interpret constructs containing lifetimes if you are familiar with C.
 
@@ -2941,7 +2941,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 # Misc
 
 
-## Links & Services
+## 链接 & 服务
 
 These are other great visual guides and tables.
 

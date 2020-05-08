@@ -1,4 +1,4 @@
-# ![Logo](/static/logo.png) Rust Language Cheat Sheet
+# ![Logo](/static/logo.png) Rust 语言备忘清单（中文翻译）
 
 [![Read Online](/gfx/button_read-online.png)](https://cheats.rs)
 [![Cached PDF](/gfx/button_cached-pdf.png)](https://github.com/ralfbiedert/cheats.rs/releases/latest)
