@@ -1,10 +1,9 @@
 # ![Logo](/static/logo.png) Rust 语言备忘清单（中文翻译）
 
-[![Read Online](/gfx/button_read-online.png)](https://cheats.rs)
-[![Cached PDF](/gfx/button_cached-pdf.png)](https://github.com/ralfbiedert/cheats.rs/releases/latest)
+[![在线阅读](/gfx/button_read-online.png)](https://cheats.rs)
+[![预览 PDF](/gfx/button_cached-pdf.png)](https://github.com/ralfbiedert/cheats.rs/releases/latest)
 
 † PDF is only updated occasionally and mainly provided for mobile users who can't use the "Generate PDF" button on the site. Online version is generally recommended.
-
 
 # Background
 
@@ -57,7 +56,9 @@ Takes additional inspiration from:
 * [String Conversions](https://docs.google.com/spreadsheets/d/19vSPL6z2d50JlyzwxariaYD6EU2QQUQqIDOGbiGQC7Y/pubhtml?gid=0&single=true)
 
 
+# 关于中文翻译
 
+本中文（简体）翻译版本由 [Kingfree](https://github.com/kingfree) 提供，并以 CC 协议发布。
 
 # Legal & License
 

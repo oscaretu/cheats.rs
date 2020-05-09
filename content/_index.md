@@ -34,19 +34,19 @@ template = "index.html"
 
 <div class="column">
 
-**语言基础**
+**语言架构**
 * [数据结构](#data-structures)
-* [引用 & 指针](#references-pointers)
-* [函数 & 行为](#functions-behavior)
+* [引用和指针](#references-pointers)
+* [函数和行为](#functions-behavior)
 * [控制流程](#control-flow)
 * [代码组织](#organizing-code)
 * [类型别名和转换](#type-aliases-and-casts)
-* [宏 & 属性](#macros-attributes)
+* [宏和属性](#macros-attributes)
 * [模式匹配](#pattern-matching)
-* [泛型 & 约束](#generics-constraints)
-* [字符串 & 字符](#strings-chars)
+* [泛型和约束](#generics-constraints)
+* [字符串和字符](#strings-chars)
 * [注释](#comments)
-* [杂项](#miscellaneous)
+* [其他](#miscellaneous)
 
 **增强设施**
 * [语法糖](#language-sugar)
@@ -55,7 +55,7 @@ template = "index.html"
 **数据类型**
 * [基本类型](#basic-types)
 * [自定义类型](#custom-types)
-* [引用 & 指针s](#references-pointers-ui)
+* [引用和指针](#references-pointers-ui)
 * [闭包](#closures-data)
 * [标准库类型](#standard-library-types)
 
@@ -74,23 +74,23 @@ template = "index.html"
 
 
 **工具**
-* [Project Anatomy](#project-anatomy)
+* [项目结构](#project-anatomy)
 * [Cargo](#cargo)
 * [交叉编译](#cross-compilation)
 
 
 **编码指南**
-* [Idiomatic Rust](#idiomatic-rust)
+* [Rust 惯用法](#idiomatic-rust)
 * [Async-Await 101](#async-await-101)
-* [闭包 in APIs](#closures-in-apis)
+* [闭包 API](#closures-in-apis)
 * [理解生命周期](#reading-lifetimes)
 * [Unsafe, Unsound, Undefined](#unsafe-unsound-undefined)
-* [API Stability](#api-stability)
+* [API 稳定性](#api-stability)
 
 
-**杂项**
-* [链接 & 服务](#links-services)
-* [打印 & PDF](#printing-pdf)
+**附录**
+* [外链和服务](#links-services)
+* [打印 PDF](#printing-pdf)
 
 
 </div>
@@ -105,7 +105,7 @@ template = "index.html"
 
 ## 你好, Rust!
 
-If you have never seen Rust before, or if you want to try the things below:
+如果你之前从来没用过 Rust, 或者你想试点什么东西, 都可以在这里跑一下:
 
 <div id="hellostatic">
 
@@ -124,9 +124,9 @@ fn main() {
 </div>
 
 
-### 数据结构
+### 数据结构 {#data-structures}
 
-Data types and memory locations defined via keywords.
+数据类型和内存位置由关键字定义.
 
 <div class="cheats">
 
@@ -135,89 +135,89 @@ Data types and memory locations defined via keywords.
 | `struct S {}` | 定义包含命名字段的 **结构体** {{ book(page="ch05-00-structs.html") }} {{ ex(page="custom_types/structs.html") }} {{ std(page="std/keyword.struct.html") }} {{ ref(page="expressions/struct-expr.html") }} . |
 | {{ tab() }} `struct S { x: T }` | 定义包含 `T` 类型命名字段 `x` 的结构体. |
 | {{ tab() }} `struct S` &#8203;`(T);` | 定义 `T` 类型数字字段 `.0` 的「元组」结构体. |
-| {{ tab() }} `struct S;` | 定义一个 **零大小** {{ nom(page="exotic-sizes.html#zero-sized-types-zsts")}} 单位的结构体. 不占空间. |
+| {{ tab() }} `struct S;` | 定义一个 **零大小** {{ nom(page="exotic-sizes.html#zero-sized-types-zsts")}} 单元的结构体. 不占空间. |
 | `enum E {}` | 定义 **枚举** {{ book(page="ch06-01-defining-an-enum.html") }} {{ ex(page="custom_types/enum.html#enums") }} {{ ref(page="items/enumerations.html") }}, _见_ [数字数据类型](https://en.wikipedia.org/wiki/Algebraic_data_type), [标签联合](https://en.wikipedia.org/wiki/Tagged_union). |
-| {{ tab() }}  `enum E { A, B`&#8203;`(), C {} }` | Define variants of enum; can be unit- `A`, tuple- `B` &#8203;`()` and struct-like `C{}`. |
-| {{ tab() }}  `enum E { A = 1 }` | If variants are only unit-like, allow discriminant values, e.g., for FFI. |
-| `union U {}` | 不安全的 C 风格 **联合体**{{ ref(page="items/unions.html") }}, 用于 FFI 兼容. |
-| `static X: T = T();`  | 有 `'static` 生命周期的 **全局变量** {{ book(page="ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable") }} {{ ex(page="custom_types/constants.html#constants") }} {{ ref(page="items/static-items.html#static-items") }} , 独立内存位置. |
+| {{ tab() }}  `enum E { A, B`&#8203;`(), C {} }` | 定义变体枚举; 它可以是单元 `A`, 元组 `B` &#8203;`()` 或者结构体风格的 `C{}`. |
+| {{ tab() }}  `enum E { A = 1 }` | 如果所有变体都是单元值, 允许判别式值, 可用于 FFI. |
+| `union U {}` | 不安全的 C 风格 **联合体**{{ ref(page="items/unions.html") }}, 用于兼容 FFI. |
+| `static X: T = T();`  | 有 `'static` 生命周期的 **全局变量** {{ book(page="ch19-01-unsafe-rust.html#accessing-or-modifying-a-mutable-static-variable") }} {{ ex(page="custom_types/constants.html#constants") }} {{ ref(page="items/static-items.html#static-items") }} , 内存位置独立. |
 | `const X: T = T();`  | 定义 **常量** {{ book(page="ch03-01-variables-and-mutability.html#differences-between-variables-and-constants") }} {{ ex(page="custom_types/constants.html") }} {{ ref(page="items/constant-items.html") }}. 使用时会临时复制一份. |
-| `let x: T;`  | Allocate `T` bytes on stack {{ note( note="1") }} bound as `x`. Assignable once, not mutable.  |
-| `let mut x: T;`  | Like `let`, but allow for mutability and mutable borrow. {{ note( note="2") }} |
-| {{ tab() }} `x = y;` | Moves `y` to `x`, invalidating `y` if `T` is not `Copy`, and copying `y` otherwise. |
+| `let x: T;`  | 在栈 {{ note( note="1") }} 上分配 `T` 大小的字节并命名为 `x`. 一旦分配, 不可修改.  |
+| `let mut x: T;`  | 类似 `let`, 但允许修改和可变借用. {{ note( note="2") }} |
+| {{ tab() }} `x = y;` | 将 `y` 移动到 `x`, 如果 `T` 不能 `Copy`, `y` 将不再可用, 否则会复制一份 `y`. |
 
 </div>
 
 <div class="footnotes">
 
-<sup>1</sup> They live on the stack for synchronous code. For `async` code these variables become part of the async's state machine which may ultimately reside on the heap.<br>
-<sup>2</sup> Note that technically _mutable_ and _immutable_ are a bit of a misnomer. Even if you have an immutable binding or shared reference, it might contain a [Cell](https://doc.rust-lang.org/std/cell/index.html), which supports so called _interior mutability_.
+<sup>1</sup> 同步代码中, 它们生存在栈上. 但对于 `async` 代码, 这些变量将会成为异步状态机的一部分, 它们最终是在堆上.<br>
+<sup>2</sup> 注意术语 _可变_ 和 _不可变_ 并不准确. 尽管你有一个不可变绑定或者共享引用, 它也有可能包含一个 [Cell](https://doc.rust-lang.org/std/cell/index.html), 它仍支持 _内部可变性_.
 
 </div>
 
 
 {{ tablesep() }}
 
-Creating and accessing data structures; and some more _sigilic_ types.
+创建和访问数据结构; 以及一些 _神奇_ 类型.
 
 <div class="cheats">
 
 | 示例 | 说明 |
 |---------|-------------|
-| `S { x: y }` | Create `struct S {}` or `use`'ed `enum E::S {}` with field `x` set to `y`. |
-| `S { x }` | Same, but use local variable `x` for field `x`. |
-| `S { ..s }` | Fill remaining fields from `s`, esp. useful with [Default](https://doc.rust-lang.org/std/default/trait.Default.html). |
-| `S { 0: x }` | Like `S` &#8203;`(x)` below, but set field `.0` with struct syntax.  |
-| `S`&#8203; `(x)` | Create `struct S` &#8203;`(T)` or `use`'ed `enum E::S`&#8203; `()` with field `.0` set to `x`. |
-| `S` | If `S` is unit `struct S;` or `use`'ed `enum E::S` create value of `S`. |
-| `E::C { x: y }` | Create enum variant `C`. Other methods above also work. |
-| `()` | Empty tuple, both literal and type, aka **unit**. {{ std(page="std/primitive.unit.html") }} |
-| `(x)` | Parenthesized expression. |
-| `(x,)` | Single-element **tuple** expression. {{ ex(page="primitives/tuples.html") }} {{ std(page="std/primitive.tuple.html") }} {{ ref(page="expressions/tuple-expr.html") }} |
-| `(S,)` | Single-element tuple type. |
-| `[S]` | Array type of unspecified length, i.e., **slice**. {{ std(page="std/primitive.slice.html") }}  {{ ex(page="primitives/array.html") }}  {{ ref(page="types.html#array-and-slice-types") }} Can't live on stack. {{ note( note="*") }} |
-| `[S; n]` | **Array type** {{ ex(page="primitives/array.html") }}  {{ std(page="std/primitive.array.html") }} of fixed length `n` holding elements of type `S`. |
-| `[x; n]` | Array instance with `n` copies of `x`. {{ ref(page="expressions/array-expr.html") }} |
-| `[x, y]` | Array instance with given elements `x` and `y`. |
-| `x[0]` | Collection indexing. Overloadable [Index](https://doc.rust-lang.org/std/ops/trait.Index.html), [IndexMut](https://doc.rust-lang.org/std/ops/trait.IndexMut.html) |
-| `x[..]` | Collection slice-like indexing via [RangeFull](https://doc.rust-lang.org/std/ops/struct.RangeFull.html), _c_. slices.  |
-| `x[a..]` | Collection slice-like indexing via [RangeFrom](https://doc.rust-lang.org/std/ops/struct.RangeFrom.html). |
-| `x[..b]` | Collection slice-like indexing [RangeTo](https://doc.rust-lang.org/std/ops/struct.RangeTo.html). |
-| `x[a..b]` | Collection slice-like indexing via [Range](https://doc.rust-lang.org/std/ops/struct.Range.html). |
-| `a..b` | 左闭右开 **区间** {{ ref(page="expressions/range-expr.html") }} , `..b` 同理.  |
+| `S { x: y }` | 创建 `struct S {}`, 或 `use` 的 `enum E::S {}` 字段 `x` 设置为 `y`. |
+| `S { x }` | 同上, 但字段 `x` 会设置为局部变量 `x`. |
+| `S { ..s }` | 用 `s` 填充剩余字段, 常配合 [Default](https://doc.rust-lang.org/std/default/trait.Default.html) 使用. |
+| `S { 0: x }` | 类似下面的 `S` &#8203;`(x)` 但是用结构体语法初始化字段 `.0`.  |
+| `S`&#8203; `(x)` | 创建 `struct S` &#8203;`(T)`, 或 `use` 的 `enum E::S`&#8203; `()` 其中字段 `.0` 设置为 `x`. |
+| `S` | 表示 `struct S;` 或以 `S` 为值创建 `use` 来的 `enum E::S`. |
+| `E::C { x: y }` | 创建枚举变体 `C`. 上面的方法依然可用. |
+| `()` | 空元组, 既是字面量也是类型, 又称 **单元**. {{ std(page="std/primitive.unit.html") }} |
+| `(x)` | 括号表达式. |
+| `(x,)` | 单元素 **元组** 表达式. {{ ex(page="primitives/tuples.html") }} {{ std(page="std/primitive.tuple.html") }} {{ ref(page="expressions/tuple-expr.html") }} |
+| `(S,)` | 单元素元组类型. |
+| `[S]` | 未指明长度的数组类型, 如 **切片**. {{ std(page="std/primitive.slice.html") }}  {{ ex(page="primitives/array.html") }}  {{ ref(page="types.html#array-and-slice-types") }} 不能生存在栈上. {{ note( note="*") }} |
+| `[S; n]` | 元素类型为 `S` 定长为 `n` 的 **数组类型** {{ ex(page="primitives/array.html") }}  {{ std(page="std/primitive.array.html") }}. |
+| `[x; n]` | 由 `n` 个 `x` 的副本构成的数组实例. {{ ref(page="expressions/array-expr.html") }} |
+| `[x, y]` | 由给定元素 `x` 和 `y` 构成的数组实例. |
+| `x[0]` | 组合的索引. 可重载 [Index](https://doc.rust-lang.org/std/ops/trait.Index.html), [IndexMut](https://doc.rust-lang.org/std/ops/trait.IndexMut.html) |
+| `x[..]` | 组合的切片式索引, 全部范围 [RangeFull](https://doc.rust-lang.org/std/ops/struct.RangeFull.html), _见_ 切片.  |
+| `x[a..]` | 组合的切片式索引, 指定起始的范围 [RangeFrom](https://doc.rust-lang.org/std/ops/struct.RangeFrom.html). |
+| `x[..b]` | 组合的切片式索引, 指定终止的范围 [RangeTo](https://doc.rust-lang.org/std/ops/struct.RangeTo.html). |
+| `x[a..b]` | 组合的切片式索引, 指定始终的范围 [Range](https://doc.rust-lang.org/std/ops/struct.Range.html). |
+| `a..b` | 左闭右开 **区间** {{ ref(page="expressions/range-expr.html") }}, `..b` 同理.  |
 | `a..=b` | 闭区间, `..=b` 同理. |
-| `s.x` | Named **field access**, {{ ref(page="expressions/field-expr.html") }} might try to [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html) if `x` not part of type `S`. |
-| `s.0` | Numbered field access, used for tuple types `S` &#8203;`(T)`. |
+| `s.x` | 命名 **字段访问** {{ ref(page="expressions/field-expr.html") }}, 如果 `x` 不是 `S` 的一部分的话则会尝试 [Deref](https://doc.rust-lang.org/std/ops/trait.Deref.html). |
+| `s.0` | 数字字段访问, 用于元组类型 `S` &#8203;`(T)`. |
 
 </div>
 
 <div class="footnotes">
 
-<sup>*</sup> For now, see [tracking issue](https://github.com/rust-lang/rust/issues/48055) and corresponding [RFC 1909](https://github.com/rust-lang/rfcs/pull/1909).
+<sup>*</sup> 目前, 可以参考 [该已知问题](https://github.com/rust-lang/rust/issues/48055) 和关联的 [RFC 1909](https://github.com/rust-lang/rfcs/pull/1909).
 
 </div>
 
 
-### 引用 & 指针
+### 引用和指针 {#references-pointers}
 
-Granting access to un-owned memory. Also see section on Generics & Constraints.
+为非所有者内存赋予访问权限. 又见 [泛型和约束](#generics-constraints).
 
 
 <div class="cheats">
 
 | 示例 | 说明 |
 |---------|-------------|
-| `&S` | Shared **reference** {{ book(page="ch04-02-references-and-borrowing.html") }} {{ std(page="std/primitive.reference.html") }} {{ nom(page="references.html")}} {{ ref(page="types.html#pointer-types")}} (space for holding _any_ `&s`). |
-| {{ tab() }} `&[S]` | Special slice reference that contains (`address`, `length`). |
-| {{ tab() }} `&str` | Special string reference that contains (`address`, `length`). |
-| {{ tab() }} `&mut S` | Exclusive reference to allow mutability (also `&mut [S]`, `&mut dyn S`, ...) |
-| {{ tab() }} `&dyn T` | Special **trait object** {{ book(page="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types") }} reference that contains (`address`, `vtable`). |
-| `*const S` | Immutable **raw pointer type** {{ book(page="ch19-01-unsafe-rust.html#dereferencing-a-raw-pointer") }} {{ std(page="std/primitive.pointer.html") }} {{ ref(page="types.html#raw-pointers-const-and-mut") }} w/o memory safety. |
-| `*mut S` | Mutable raw pointer type w/o memory safety. |
-| `&s` | Shared **borrow** {{ book(page="ch04-02-references-and-borrowing.html") }} {{ ex(page="scope/borrow.html") }} {{ std(page="std/borrow/trait.Borrow.html") }} (e.g., address, len, vtable, ... of _this_ `s`, like `0x1234`). |
-| `&mut s` | Exclusive borrow that allows **mutability**. {{ ex(page="scope/borrow/mut.html") }} |
-| `ref s` | **Bind by reference**. {{ ex(page="scope/borrow/ref.html") }} {{ deprecated() }}|
-| `*r` | **Dereference** {{ book(page="ch15-02-deref.html") }} {{ std(page="std/ops/trait.Deref.html") }} {{ nom(page="vec-deref.html") }} a reference `r` to access what it points to. |
+| `&S` | 共享 **引用** {{ book(page="ch04-02-references-and-borrowing.html") }} {{ std(page="std/primitive.reference.html") }} {{ nom(page="references.html")}} {{ ref(page="types.html#pointer-types")}} (用于存储 _任意_ `&s`). |
+| {{ tab() }} `&[S]` | 特殊的切片引用, 包含地址和长度 (`address`, `length`). |
+| {{ tab() }} `&str` | 特殊的字符串引用, 包含地址和长度 (`address`, `length`). |
+| {{ tab() }} `&mut S` | 允许修改的独占引用 (又见 `&mut [S]`, `&mut dyn S`, ...) |
+| {{ tab() }} `&dyn T` | 特殊的 **trait 对象** {{ book(page="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types") }} 引用, 包含地址和虚表 (`address`, `vtable`). |
+| `*const S` | 不可变的 **裸指针类型** {{ book(page="ch19-01-unsafe-rust.html#dereferencing-a-raw-pointer") }} {{ std(page="std/primitive.pointer.html") }} {{ ref(page="types.html#raw-pointers-const-and-mut") }}, 内存不安全. |
+| `*mut S` | 可变的裸指针类型, 内存不安全. |
+| `&s` | 共享 **借用** {{ book(page="ch04-02-references-and-borrowing.html") }} {{ ex(page="scope/borrow.html") }} {{ std(page="std/borrow/trait.Borrow.html") }} (例如 _该_ `s` 的地址、长度、虚表等, 比如 `0x1234`). |
+| `&mut s` | 有 **可变性** 的独占借用. {{ ex(page="scope/borrow/mut.html") }} |
+| `ref s` | **引用绑定**. {{ ex(page="scope/borrow/ref.html") }} {{ deprecated() }}|
+| `*r` | 对引用 `r` **解引用** {{ book(page="ch15-02-deref.html") }} {{ std(page="std/ops/trait.Deref.html") }} {{ nom(page="vec-deref.html") }} 以访问其指向的事物. |
 | {{ tab() }} `*r = s;` | If `r` is a mutable reference, move or copy `s` to target memory. |
 | {{ tab() }} `s = *r;` | Make `s` a copy of whatever `r` references, if that is `Copy`. |
 | {{ tab() }} `s = *my_box;` | [Special case](https://www.reddit.com/r/rust/comments/b4so6i/what_is_exactly/ej8xwg8/) for `Box` that can also move out Box'ed content if it isn't `Copy`. |
@@ -234,9 +234,9 @@ Granting access to un-owned memory. Also see section on Generics & Constraints.
 
 
 
-###  函数 & 行为
+###  函数和行为 {#functions-behavior}
 
-Define units of code and their abstractions.
+定义代码单元及其抽象.
 
 <div class="cheats">
 
@@ -266,9 +266,9 @@ Define units of code and their abstractions.
 </div>
 
 
-### 控制流程
+### 控制流程 {#control-flow}
 
-Control execution within a function.
+在函数中控制执行.
 
 <div class="cheats">
 
@@ -300,9 +300,9 @@ Control execution within a function.
 
 
 
-### 代码组织
+### 代码组织 {#organizing-code}
 
-Segment projects into smaller units and minimize dependencies.
+将项目分割成小的单元并最小化依赖.
 
 <div class="cheats">
 
@@ -333,9 +333,9 @@ Segment projects into smaller units and minimize dependencies.
 
 
 
-### 类型别名和转换
+### 类型别名和转换 {#type-aliases-and-casts}
 
-Short-hand names of types, and methods to convert one type to another.
+类型名称的简写, 以及转为其他类型的方法.
 
 <div class="cheats">
 
@@ -355,16 +355,16 @@ Short-hand names of types, and methods to convert one type to another.
 
 
 
-### 宏 & 属性
+### 宏和属性 {#macros-attributes}
 
-Code generation constructs expanded before the actual compilation happens.
+实际编译前的代码预展开.
 
 <div class="cheats">
 
-| Example |  Explanation |
+| 示例 |  说明 |
 |---------|---------|
 | `m!()` |  **Macro** {{book(page="ch19-06-macros.html")}} {{std(page="std/index.html#macros")}} {{ref(page="macros.html")}} invocation, also `m!{}`, `m![]` (depending on macro). |
-| `$x:ty`  | Macro capture, also `$x:expr`, `$x:ty`, `$x:path`, ... see next table. |
+| `$x:ty`  | 宏捕获, 又见 `$x:expr`, `$x:ty`, `$x:path`, ... see next table. |
 | `$x` |  Macro substitution in **macros by example**. {{book(page="ch19-06-macros.html")}} {{ex(page="macros.html#macro_rules")}} {{ref(page="macros-by-example.html")}}
 | `$(x),*` | Macro repetition "zero or more times" in macros by example. |
 | {{ tab() }} `$(x),?` | Same, but "zero or one time". |
@@ -382,7 +382,7 @@ In a `macro_rules!` implementation, the following macro captures can be used:
 
 <div class="cheats">
 
-| Macro Capture |  Explanation |
+| 宏捕获 |  说明 |
 |---------|---------|
 | `$x:item`    | An item, like a function, struct, module, etc. |
 | `$x:block`   | A block `{}` of statements or expressions, e.g., `{ let x = 5; }` |
@@ -401,9 +401,9 @@ In a `macro_rules!` implementation, the following macro captures can be used:
 
 
 
-### 模式匹配
+### 模式匹配 {#pattern-matching}
 
-Constructs found in `match` or `let` expressions, or function parameters.
+函数参数、`match` 或 `let` 表达式中的构造.
 
 
 <div class="cheats">
@@ -436,7 +436,7 @@ Pattern matching arms in `match` expressions. The left side of these arms can al
 
 <div class="cheats">
 
-| Match Arm | Explanation |
+| 匹配分支 | 说明 |
 |---------|-------------|
 |  `E::A => {}` | Match enum variant `A`, _c_. **pattern matching**. {{ book(page="ch06-02-match.html") }} {{ ex(page="flow_control/match.html") }} {{ ref(page="expressions/match-expr.html") }} |
 |  `E::B ( .. ) => {}` | Match enum tuple variant `B`, wildcard any index. |
@@ -468,9 +468,9 @@ Pattern matching arms in `match` expressions. The left side of these arms can al
 
 
 
-### 泛型 & 约束
+### 泛型和约束 {#generics-constraints}
 
-Generics combine with many other constructs such as `struct S<T>`, `fn f<T>()`, ...
+泛型有多种构造方式: `struct S<T>`, `fn f<T>()`, ...
 
 <div class="cheats">
 
@@ -506,9 +506,9 @@ Generics combine with many other constructs such as `struct S<T>`, `fn f<T>()`, 
 
 
 
-### 字符串 & 字符
+### 字符串和字符 {#strings-chars}
 
-Rust has several ways to create string or char literals, depending on your needs.
+Rust 为你提供了若干种创建字符串和字符字面量的办法.
 
 
 <div class="cheats">
@@ -546,9 +546,9 @@ Rust has several ways to create string or char literals, depending on your needs
 </div>
 
 
-### 杂项
+### 其他 {#miscellaneous}
 
-These sigils did not fit any other category but are good to know nonetheless.
+这些小技巧不属于其他分类但最好了解一下.
 
 <div class="cheats">
 
@@ -561,7 +561,7 @@ These sigils did not fit any other category but are good to know nonetheless.
 | `1_u8` | Type specifier for **numeric literals** {{ ex(page="types/literals.html#literals") }} {{ ref(page="tokens.html#number-literals") }}  (also `i8`, `u16`, ...). |
 | `0xBEEF`, `0o777`, `0b1001`  | Hexadecimal (`0x`), octal (`0o`) and binary (`0b`) integer literals. |
 | `r#foo` | A **raw identifier** {{ book(page="appendix-01-keywords.html?highlight=raw,iten#raw-identifiers") }} {{ ex(page="compatibility/raw_identifiers.html?highlight=raw,iden#raw-identifiers") }} for edition compatibility. |
-| `x;` | **Statement** {{ ref(page="statements.html")}} terminator, _c_. **expressions** {{ ex(page="expression.html") }} {{ ref(page="expressions.html")}} |
+| `x;` | **语句** {{ ref(page="statements.html")}} 终止符, _见_ **表达式** {{ ex(page="expression.html") }} {{ ref(page="expressions.html")}} |
 
 </div>
 
@@ -613,12 +613,12 @@ If something works that "shouldn't work now that you think about it", it might b
 
 # 数据类型
 
-Memory representations of common data types.
+通用数据类型的内存表示.
 
 
 ## 基本类型 {#basic-types}
 
-Essential types built into the core of the language.
+语言核心内建的必要类型.
 
 
 #### 数字类型 {{ ref(page="types/numeric.html") }}
@@ -915,7 +915,7 @@ Essential types built into the core of the language.
 {{ tablesep() }}
 
 
-## 自定义类型
+## 自定义类型 {#custom-types}
 
 Basic types definable by users. Actual <b>layout</b> {{ ref(page="type-layout.html") }} is subject to <b>representation</b>; {{ ref(page="type-layout.html#representations") }} padding can be present.
 
@@ -1060,7 +1060,7 @@ These **sum types** hold a value of one of their sub types:
 
 
 
-## 引用 & 指针s {#references-pointers-ui}
+## 引用和指针 {#references-pointers-ui}
 
 References give safe access to other memory, raw pointers `unsafe` access.
 For some referents additional `payload` may be present (see below).
@@ -1296,7 +1296,7 @@ the environment you accessed when defining the closure. For example:
 
 
 
-## 标准库类型
+## 标准库类型 {#standard-library-types}
 
 Rust's 标准库 combines many of the above primitive types into useful types with special semantics.
 Some common types:
@@ -1650,12 +1650,12 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
 
 <!-- <div class="wip"> -->
 
-## Traits
+## Traits {#traits}
 
 Traits define common behavior. If `S` implements `trait T`, you know `S` can behave as prescribed by `T`. Below is an overview of traits that
 may be a bit more tricky.
 
-#### 🧵 Thread Safety
+#### 🧵 线程安全
 
 <!-- Shamelessly stolen from https://www.reddit.com/r/rust/comments/ctdkyr/understanding_sendsync/exk8grg/ -->
 <table class="sendsync">
@@ -1677,7 +1677,7 @@ may be a bit more tricky.
 </div>
 
 
-#### 🚥 Iterators
+#### 🚥 迭代器
 
 
 <div class="tabs header-std-green">
@@ -1779,7 +1779,7 @@ Conversions XXX
 
 
 
-## 字符串转换
+## 字符串转换 {#string-conversions}
 
 
 If you **want** a string of type ...
@@ -1798,7 +1798,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x`|
 |`CString`|`x.into_string()?`|
@@ -1820,7 +1820,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`CString::new(x)?`|
 |`CString`|`x`|
@@ -1843,7 +1843,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.into()`|
 |`CString`|`x.to_str()?.into()`|
@@ -1865,7 +1865,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.into()`|
 |`CString`|`x.to_str()?.into()`|
@@ -1887,7 +1887,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.into_bytes()`|
 |`CString`|`x.into_bytes()`|
@@ -1909,7 +1909,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.as_str()`|
 |`CString`|`x.to_str()?`|
@@ -1931,7 +1931,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`CString::new(x)?.as_c_str()`|
 |`CString`|`x.as_c_str()`|
@@ -1954,7 +1954,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`OsStr::new(&x)`|
 |`CString`| {{ todo() }} |
@@ -1976,7 +1976,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.as_ref()`|
 |`CString`|`x.to_str()?.as_ref()`|
@@ -1998,7 +1998,7 @@ If you **want** a string of type ...
 <div class="tab-panel">
 <div class="tab-content stringconversion">
 
-| If you **have** `x` of type ...| Use this ... |
+| `x` 的类型 | 转换方法 |
 | --- | --- |
 |`String`|`x.as_bytes()`|
 |`CString`|`x.as_bytes()`|
@@ -2016,11 +2016,11 @@ If you **want** a string of type ...
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-str-9" name="tab-group-str" >
-<label class="tab-label" for="tab-str-9"><b>Other</b></label>
+<label class="tab-label" for="tab-str-9"><b>其他</b></label>
 <div class="tab-panel">
 <div class="tab-content stringconversion-other">
 
-| You **want** | And **have** `x` | Use this ... |
+| 你 **想要** | 并且 **拥有** `x` | 转换方法 |
 | --- | --- | --- |
 |<b>`*const c_char`</b>|<b>`CString`</b>|`x.as_ptr()`|
 
@@ -2053,7 +2053,7 @@ CString::new(bytes)?
 {{ tablesep() }}
 
 
-## 字符串格式化
+## 字符串格式化 {#string-formatting}
 
 Formatting applies to `print!`, `eprint!`, `write!` (and their -`ln` siblings like `println!`).
 Each format argument is either empty `{}`, `{argument}`, or follows a basic [**syntax**](https://doc.rust-lang.org/std/fmt/index.html#syntax):
@@ -2104,10 +2104,10 @@ Each format argument is either empty `{}`, `{argument}`, or follows a basic [**s
 
 ---
 
-# Tooling
+# 工具
 
 
-## Project Anatomy
+## 项目结构 {#project-anatomy}
 
 Basic project layout, and common files and folders, as used by Rust [tooling](#tooling).
 
@@ -2372,7 +2372,7 @@ A large number of additional cargo plugins [**can be found here**](https://crate
 {{ tablesep() }}
 
 
-## 交叉编译
+## 交叉编译 {#cross-compilation}
 
 <!-- <div class="steps"> -->
 
@@ -2426,10 +2426,10 @@ set CC=C:\[PATH_TO_TOOLCHAIN]\prebuilt\windows-x86_64\bin\aarch64-linux-android2
 
 ---
 
-# Coding Guides
+# 编码指南
 
 
-## Idiomatic Rust
+## Rust 惯用法 {#idiomatic-rust}
 
 If you are used to programming Java or C, consider these.
 
@@ -2581,7 +2581,7 @@ without assuming executor specifics. <br/>
 {{ tablesep() }}
 
 
-## 闭包 in APIs
+## 闭包 API {#closures-in-apis}
 
 There is a subtrait relationship `Fn` : `FnMut` : `FnOnce`. That means, a closure that
 implements `Fn`, also implements `FnMut` and `FnOnce`. Likewise, a closure
@@ -2650,7 +2650,7 @@ That gives the following advantages and disadvantages:
 {{ tablesep() }}
 
 
-## 理解生命周期
+## 理解生命周期 {#reading-lifetimes}
 
 Lifetimes can be overwhelming at times. Here is a simplified guide on how to read and interpret constructs containing lifetimes if you are familiar with C.
 
@@ -2842,7 +2842,7 @@ fn unsound_ref<T>(x: &T) -> &u128 {      // Signature looks safe to users. Happe
 
 
 
-## API Stability
+## API 稳定性 {#api-stability}
 
 These changes can break client code, compare [**RFC 1105**](https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md). Major changes (🔴) are **definitely breaking**, while minor changes (🟡) **might be breaking**:
 
@@ -2938,10 +2938,10 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 ---
 
-# Misc
+# 附录
 
 
-## 链接 & 服务
+## 外链和服务 {#links-services}
 
 These are other great visual guides and tables.
 
@@ -2975,7 +2975,7 @@ All major Rust books developed by the community.
 <div class="header-lavender">
 
 
-| Books&nbsp;️📚  | Description |
+| 书籍&nbsp;️📚  | 描述 |
 |--------| -----------|
 | [The Rust Programming Language](https://doc.rust-lang.org/stable/book/) | Standard introduction to Rust, **start here if you are new**. |
 | {{ tab() }} [API Guidelines](https://rust-lang.github.io/api-guidelines/) | How to write idiomatic and re-usable Rust. |
@@ -3009,7 +3009,7 @@ Comprehensive lookup tables for common components.
 
 <div class="header-lavender">
 
-| Tables&nbsp;📋| Description |
+| 列表&nbsp;📋| 描述 |
 |--------| -----------|
 | [Rust Changelog](https://github.com/rust-lang/rust/blob/master/RELEASES.md) | See all the things that changed in a particular version. |
 | [Rust Forge](https://forge.rust-lang.org/) | Lists release train and links for people working on the compiler. |
@@ -3027,7 +3027,7 @@ Online services which provide information or tooling.
 
 <div class="header-lavender">
 
-| Services&nbsp;⚙️ | Description |
+| 服务&nbsp;⚙️ | 描述 |
 |--------| -----------|
 | [crates.io](https://crates.io/) | All 3rd party libraries for Rust. |
 | [std.rs](https://std.rs/) | Shortcut to `std` documentation. |
@@ -3040,7 +3040,7 @@ Online services which provide information or tooling.
 {{ tablesep() }}
 
 
-## Printing & PDF
+## 打印 PDF
 
 > Want this Rust cheat sheet as a PDF download? <a href="javascript:window.print()"><b>Generate PDF</b></a> (or select File > Print – might take 10s so) and then "Save as PDF". It looks great in both Firefox's and Chrome's PDF exports. Alternatively use the <a href="https://github.com/ralfbiedert/cheats.rs/releases/download/2020-02-08/rust_cheat_sheet.pdf"><b>cached PDF</b></a>.
 
@@ -3048,6 +3048,10 @@ Online services which provide information or tooling.
 
 <footer>
 
-Ralf Biedert, {{ year() }} – [cheats.rs](https://cheats.rs) <br/><br/> [Legal & Privacy](legal).
+Ralf Biedert, {{ year() }} – [cheats.rs](https://cheats.rs) 
+<br/>
+中文翻译 [Kingfree](https://github.com/kingfree)
+<br/>
+[Legal & Privacy](legal).
 
 </footer>
