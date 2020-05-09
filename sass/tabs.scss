@@ -17,6 +17,9 @@
 
 .tabs .tab {
   display: inline;
+  @media print {
+    display: block;
+  }
 }
 
 .tabs .tab-label {
@@ -30,7 +33,11 @@
   padding: 10px;
   position: relative;
   vertical-align: bottom;
-  cursor: pointer;;
+  cursor: pointer;
+  @media print {
+    display: block;
+    width: 100%;
+  }
 }
 
 .tabs .tab > [type="radio"] {
@@ -40,6 +47,9 @@
   position: fixed;
   width: 1px;
   z-index: -1;
+  @media print {
+    visibility: hidden;
+  }
 }
 
 .tabs .tab-panel {
@@ -49,6 +59,11 @@
   position: relative;
   height: 0;
   width: 0;
+  @media print {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
 }
 
 .tabs .tab-content {
@@ -61,6 +76,9 @@
   font-size: 10pt;
   margin-top: -1px;
   width: 100%;
+  @media print {
+    float: none;
+  }
 }
 
 .tabs .tab [type="radio"]:checked + .tab-label {
@@ -68,8 +86,14 @@
   border-bottom-width: 0;
   padding-bottom: 11px;
   z-index: 1;
+  @media print {
+    border-bottom-width: 1px;
+  }
 }
 
 .tabs .tab [type="radio"]:checked ~ .tab-panel {
   display: inline;
+  @media print {
+    display: block;
+  }
 }

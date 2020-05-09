@@ -11,30 +11,30 @@ template = "index.html"
 
 
 
-> Contains clickable links to
+> 可点击的链接: 
 > **Rust 程序设计语言** {{ book(page="") }},
-> **Rust by Example** {{ ex(page="") }},
+> **从例子里学 Rust** {{ ex(page="") }},
 > **标准库文档** {{ std(page="std") }},
 > **Rust 黑魔法** {{ nom(page="") }},
 > **Rust 参考手册** {{ ref(page="") }}.
-> Other symbols used:
-> largely **废弃** {{ deprecated() }},
-> has a **最低版本** {{ edition(ed="'18") }},
-> is **work in progress** {{ experimental() }},
-> or **bad** {{ bad() }}.
+> <br>其他符号:
+> 多半 **已废弃** {{ deprecated() }},
+> 要求 **最低版本** {{ edition(ed="'18") }},
+> 正在 **施工中** {{ experimental() }},
+> 或者 **不好的写法** {{ bad() }}.
+
+<div class="noprint">
 
 <div class="controls">
     <a id="toggle_ligatures" href="javascript:toggle_ligatures()">Fira Code 连字 (<code>..=, =></code>)</a>
     <a href="javascript:toggle_night_mode()">暗色模式 &#x1f4a1;</a>
 </div>
 
-<div class="noprint">
-
 <div class="toc">
 
 <div class="column">
 
-**语言**
+**语言基础**
 * [数据结构](#data-structures)
 * [引用 & 指针](#references-pointers)
 * [函数 & 行为](#functions-behavior)
@@ -48,7 +48,7 @@ template = "index.html"
 * [注释](#comments)
 * [杂项](#miscellaneous)
 
-**幕后**
+**增强设施**
 * [语法糖](#language-sugar)
 
 
@@ -578,9 +578,9 @@ For some of them Rust also supports **operator overloading**. {{ std(page="std/o
 
 <div class="magic">
 
-# 幕后
+# 增强设施
 
-## 语法糖
+## 语法糖 {#language-sugar}
 
 If something works that "shouldn't work now that you think about it", it might be due to one of these.
 
@@ -611,12 +611,12 @@ If something works that "shouldn't work now that you think about it", it might b
 <!-- This whole section doesn't look good on print -->
 <div class="noprint">
 
-# 数据 & 类型
+# 数据类型
 
 Memory representations of common data types.
 
 
-## 基本类型
+## 基本类型 {#basic-types}
 
 Essential types built into the core of the language.
 
@@ -736,7 +736,7 @@ Essential types built into the core of the language.
         <byte style="border-color: lightslategrey;"><code></code></byte>
     </visual>
     <zoom>
-        Same as <code>ptr</code> on platform.
+        和平台的 <code>ptr</code> 一样.
     </zoom>
 </datum>
 
@@ -757,13 +757,13 @@ Essential types built into the core of the language.
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-numeric-1" name="tab-group-numeric" checked>
-<label class="tab-label" for="tab-numeric-1"><b>Integer Types</b></label>
+<label class="tab-label" for="tab-numeric-1"><b>整型</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
 
 
-|Integer*|Max Value|
+|整型*|最大值|
 |---|---|
 |`u8`| `255` |
 |`u16` | `65_535` |
@@ -773,7 +773,7 @@ Essential types built into the core of the language.
 
 <div class="footnotes">
 
-<sup>*</sup> `i8`, `i16`, ... values range from `-max/2` to `max/2`, rounded towards negative infinity.
+<sup>*</sup> `i8`, `i16`, ... 的范围为 `-max/2` 到 `max/2` (向负无穷大四舍五入).
 
 </div>
 
@@ -783,12 +783,12 @@ Essential types built into the core of the language.
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-numeric-2" name="tab-group-numeric">
-<label class="tab-label" for="tab-numeric-2"><b>Float Types</b></label>
+<label class="tab-label" for="tab-numeric-2"><b>浮点型</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
 
-Sample bit representation<sup>*</sup> for a `f32`:
+`f32` 的位表示<sup>*</sup>:
 
 <!-- NEW ENTRY -->
 <datum class="centered" style="opacity:0.7; margin-bottom:10px;">
@@ -836,30 +836,30 @@ Sample bit representation<sup>*</sup> for a `f32`:
 
 {{ tablesep() }}
 
-Explanation:
+解释:
 
-| f32 | S (1) | E (8) | F (23) | Value |
+| f32 | S (1) | E (8) | F (23) | 值 |
 |------| ---------| ---------| ---------| ---------|
-| Normalized number | ± | 1 to 254 | any | ±(1.F)<sub>2</sub> * 2<sup>E-127</sup>  |
-| Denormalized number | ± | 0 | non-zero | ±(0.F)<sub>2</sub> * 2<sup>-126</sup>  |
-| Zero | ± | 0 | 0 | ±0  |
-| Infinity | ± | 255 | 0 | ±∞  |
-| NaN | ± | 255 | non-zero | NaN  |
+| 规格化数 | ± | 1 to 254 | 任意 | ±(1.F)<sub>2</sub> * 2<sup>E-127</sup>  |
+| 非规格化数 | ± | 0 | 非零 | ±(0.F)<sub>2</sub> * 2<sup>-126</sup>  |
+| 零 | ± | 0 | 0 | ±0  |
+| 无穷大 | ± | 255 | 0 | ±∞  |
+| NaN | ± | 255 | 非零 | NaN  |
 
 {{ tablesep() }}
 
-Similarly, for <code>f64</code> types this would look like:
+<code>f64</code> 类似如下:
 
-| f64 | S (1) | E (11) | F (52) | Value |
+| f64 | S (1) | E (11) | F (52) | 值 |
 |------| ---------| ---------| ---------| ---------|
-| Normalized number | ± | 1 to 2046 | any | ±(1.F)<sub>2</sub> * 2<sup>E-1023</sup>  |
-| Denormalized number | ± | 0 | non-zero | ±(0.F)<sub>2</sub> * 2<sup>-1022</sup>  |
-| Zero | ± | 0 | 0 | ±0  |
-| Infinity | ± | 2047 | 0 | ±∞  |
-| NaN | ± | 2047 | non-zero | NaN  |
+| 规格化数 | ± | 1 to 2046 | 任意 | ±(1.F)<sub>2</sub> * 2<sup>E-1023</sup>  |
+| 非规格化数 | ± | 0 | 非零 | ±(0.F)<sub>2</sub> * 2<sup>-1022</sup>  |
+| 零 | ± | 0 | 0 | ±0  |
+| 无穷大 | ± | 2047 | 0 | ±∞  |
+| NaN | ± | 2047 | 非零 | NaN  |
 
 <div class="footnotes">
-    <sup>*</sup> Float types follow <a href="https://en.wikipedia.org/wiki/IEEE_754-2008_revision">IEEE 754-2008</a> and depend on platform endianness.
+    <sup>*</sup> 浮点类型遵循 <a href="https://en.wikipedia.org/wiki/IEEE_754-2008_revision">IEEE 754-2008</a> 规范, 并取决于平台大小端序.
 </div>
 
 </div></div></div>
@@ -875,7 +875,7 @@ Similarly, for <code>f64</code> types this would look like:
 
 
 
-#### Textual Types {{ ref(page="types/textual.html") }}
+#### 文字类型 {{ ref(page="types/textual.html") }}
 
 
 <!-- NEW ENTRY -->
@@ -887,7 +887,7 @@ Similarly, for <code>f64</code> types this would look like:
         <byte><code></code></byte>
         <byte><code></code></byte>
     </visual>
-    <description>Any UTF-8 scalar.</description>
+    <description>任意 UTF-8 标量.</description>
 </datum>
 
 
@@ -902,15 +902,15 @@ Similarly, for <code>f64</code> types this would look like:
         <byte class="bytes"><code>F</code></byte>
         <byte class="bytes"><code>-</code></byte>
         <byte class="bytes"><code>8</code></byte>
-        <note>... unspecified times</note>
+        <note>... 未指明条目</note>
     </visual>
-    <description>Rarely seen alone, but as <code>&str</code> instead.</description>
+    <description>很少单独见到, 常用 <code>&str</code> 代替.</description>
 </datum>
 
-Notice how:
+注意:
 
-- `char` is always 4 bytes and only holds a single Unicode **scalar value** (thus possibly wasting space),
-- `str` is a byte-array of unknown length guaranteed to hold **UTF-8 code points** (but harder to index).
+- `char` 总是为 4 字节, 且仅包含一个 Unicode **标量值** (尽管会浪费空间),
+- `str` 是一个未知长度的字节数组, 并保证存的都是 **UTF-8 代码点** (但难以索引).
 
 {{ tablesep() }}
 
@@ -936,7 +936,7 @@ Basic types definable by users. Actual <b>layout</b> {{ ref(page="type-layout.ht
     <visual>
        <framed class="any unsized"><code>T</code></framed>
     </visual>
-    <description>Dynamically<br>Sized Types {{ ref(page="dynamically-sized-types.html") }}</description>
+    <description>动态大小类型 {{ ref(page="dynamically-sized-types.html") }}</description>
 </datum>
 
 
@@ -980,7 +980,7 @@ Basic types definable by users. Actual <b>layout</b> {{ ref(page="type-layout.ht
        <framed class="any t"><code>T</code></framed>
        <framed class="any t"><code>T</code></framed>
        <framed class="any t"><code>T</code></framed>
-       <note>... n times</note>
+       <note>... n 次</note>
     </visual>
 </datum>
 
@@ -993,7 +993,7 @@ Basic types definable by users. Actual <b>layout</b> {{ ref(page="type-layout.ht
        <framed class="any t"><code>T</code></framed>
        <framed class="any t"><code>T</code></framed>
        <framed class="any t"><code>T</code></framed>
-       <note>... unspecified times</note>
+       <note>... 未指明条目</note>
     </visual>
 </datum>
 

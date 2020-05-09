@@ -14,6 +14,15 @@ html {
 body {
     text-rendering: optimizeLegibility;
     font-family: "Open Sans", sans-serif;
+    @media print {
+        font-family: 'Times New Roman', Times, '思源宋体', '新宋体', '宋体', serif;
+        strong {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, '思源黑体', '黑体', sans-serif
+        }
+        em {
+            font-family: 'Times New Roman', Times, '仿宋', serif;
+        }
+    }
 }
 
 
