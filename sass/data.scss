@@ -256,7 +256,7 @@ datum {
     }
 
     memory.anymem::after {
-        content: "(any mem)";
+        content: "(任意内存)";
         display: block;
         position: absolute;
         bottom: 0px;
@@ -265,7 +265,7 @@ datum {
     }
 
     memory.heap::after {
-        content: "(heap)";
+        content: "(堆)";
         display: block;
         position: absolute;
         bottom: 0px;
@@ -275,7 +275,7 @@ datum {
 
 
     memory.static::after {
-        content: "(static)";
+        content: "(静态)";
         display: block;
         position: absolute;
         bottom: 0px;
@@ -284,7 +284,7 @@ datum {
     }
 
     memory.static-vtable::after {
-        content: "(static vtable)";
+        content: "(静态虚表)";
         display: block;
         position: absolute;
         bottom: 0px;
