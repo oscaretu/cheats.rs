@@ -1282,7 +1282,7 @@ Rust 支持大部分其他语言也有的通用操作符（`+`, `*`, `%`, `=`, `
     <name>&nbsp;</name>
     <description>
     同样地，生成匿名函数 <code>fn</code> 比如 <code>f_c1 (C1, X)</code> 或 <br>
-    <code>f_c2 (&C2, X)</code>。具体地 <code>FnOnce</code>、<code>FnMut</code>、<code>Fn</code>等<br>也取决于属性和捕获类型。
+    <code>f_c2 (&C2, X)</code>。具体地 <code>FnOnce</code>、<code>FnMut</code>、<code>Fn</code> 等<br>也取决于属性和捕获类型。
     </description>
 </datum>
 
@@ -1555,7 +1555,7 @@ Rust 标准库为上面提到的基本类型扩展了更多有用的类型，并
 
 **共享所有权**
 
-If the type does not contain a `Cell` for `T`, these are often combined with one of the `Cell` types above to allow shared de-facto mutability.
+如果类型 `T` 不包含 `Cell`，那它也会包含以下 `Cell` 类型的变体以允许共享实际可变性。
 
 <!-- NEW ENTRY -->
 <datum>
@@ -1578,8 +1578,8 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
             </memory>
         </memory-entry>
     </div>
-    <description>Share ownership of <code>T</code> in same thread. Needs nested <code>Cell</code>
-    <br>or <code>RefCell</code>to allow mutation. Is neither <code>Send</code> nor <code>Sync</code>.</description>
+    <description>在同一个线程上共享 <code>T</code> 的所有权。需要嵌套 <code>Cell</code>
+    或 <br><code>RefCell</code> 以允许修改。它既不是 <code>Send</code> 也不是 <code>Sync</code> 的。</description>
 </datum>
 
 
@@ -1604,8 +1604,7 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
             </memory>
         </memory-entry>
     </div>
-    <description>Same, but allow sharing between threads IF contained<br>
-    <code>T</code> itself is <code>Send</code> and <code>Sync</code>.</description>
+    <description>同左。但如果 T 是  <code>Send</code> 和 <code>Sync</code> 的，则允许在线程间共享。</description>
 </datum>
 
 <br>
@@ -1624,8 +1623,7 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
             <code>lock</code>
         </memory>
     </memory-entry>
-    <description>Needs to be held in <code>Arc</code> to be shared between<br> threads,
-    always <code>Send</code> and <code>Sync</code>. Consider using <br> <a href="https://crates.io/crates/parking_lot">parking_lot</a> instead (faster, no heap usage).
+    <description>需要包在 <code>Arc</code> 里以实现线程间共享。总是 <code>Send</code> 和 <code>Sync</code> 的。<br>可考虑用 <a href="https://crates.io/crates/parking_lot">parking_lot</a> 代替（更快且无堆分配）。
     </description>
 </datum>
 
@@ -1642,8 +1640,7 @@ If the type does not contain a `Cell` for `T`, these are often combined with one
 
 ## Trait {#traits}
 
-Traits define common behavior. If `S` implements `trait T`, you know `S` can behave as prescribed by `T`. Below is an overview of traits that
-may be a bit more tricky.
+Trait 定义通用行为。如果 `S` 实现了 `trait T`，意味着 `S` 可以做 `T` 规定的行为。下面是一些常用但有些技巧性的 trait。
 
 #### 🧵 线程安全
 
@@ -1653,14 +1650,14 @@ may be a bit more tricky.
         <tr><th>例</th><th><code>Send</code><sup>*</sup></th><th><code>!Send</code></th></tr>
     </thead>
     <tbody>
-        <tr><td><code>Sync</code><sup>*</sup></td><td><i>多数类型</i>…… <code>Mutex&lt;T&gt;</code>, <code>Arc&lt;T&gt;</code><sup>1,2</sup></td><td><code>MutexGuard&lt;T&gt;</code><sup>1</sup>, <code>RwLockReadGuard&lt;T&gt;</code><sup>1</sup></td></tr>
-        <tr><td><code>!Sync</code></td><td><code>Cell&lt;T&gt;</code><sup>2</sup>, <code>RefCell&lt;T&gt;</code><sup>2</sup></td><td><code>Rc&lt;T&gt;</code>, <code>Formatter</code>, <code>&dyn Trait</code></td></tr>
+        <tr><td><code>Sync</code><sup>*</sup></td><td><code>Mutex&lt;T&gt;</code>、<code>Arc&lt;T&gt;</code><sup>1,2</sup>、<i>大多数类型</i>…… </td><td><code>MutexGuard&lt;T&gt;</code><sup>1</sup>、<code>RwLockReadGuard&lt;T&gt;</code><sup>1</sup></td></tr>
+        <tr><td><code>!Sync</code></td><td><code>Cell&lt;T&gt;</code><sup>2</sup>、<code>RefCell&lt;T&gt;</code><sup>2</sup></td><td><code>Rc&lt;T&gt;</code>、<code>Formatter</code>、<code>&dyn Trait</code></td></tr>
     </tbody>
 </table>
 
 <div class="footnotes">
 
-<sup>*</sup> An instance `t` where **`T: Send`** can be moved to another thread, a **`T: Sync`** means `&t` can be moved to another thread.<br>
+<sup>*</sup> **`T: Send`** 表示实例 `t` 可以移动到另一个线程；**`T: Sync`** 表示 `&t` 可以移动到另一个线程。<br>
 <sup>1</sup> 如果 `T` 为 `Sync`。 <br>
 <sup>2</sup> 如果 `T` 为 `Send`。
 
@@ -1675,36 +1672,36 @@ may be a bit more tricky.
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-trait-iter-1" name="tab-group-trait-iter" checked>
-<label class="tab-label" for="tab-trait-iter-1"><b>Using Iterators</b></label>
+<label class="tab-label" for="tab-trait-iter-1"><b>使用迭代器</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
 
-**Basics**
+**基本用法**
 
-Assume you have a collection `c` of type `C`:
+假设有一系列 `C` 类型的 `c`：
 
-* **`c.into_iter()`** &mdash; Turns collection `c` into an **`Iterator`** {{ std(page="std/iter/trait.Iterator.html") }} `i` and **consumes**<sup>*</sup> `c`. Requires **`IntoIterator`** {{ std(page="std/iter/trait.IntoIterator.html") }} for `C` to be implemented. Type of item depends on what `C` was. 'Standardized' way to get Iterators.
-* **`c.iter()`** &mdash; Courtesy method **some** collections provide, returns **borrowing** Iterator, doesn't consume `c`.
-* **`c.iter_mut()`** &mdash; Same, but **mutably borrowing** Iterator that allow collection to be changed.
-
-
-**The Iterator**
-
-Once you have an `i`:
-
-* **`i.next()`** &mdash; Returns `Some(x)` next element `c` provides, or `None` if we're done.
+* **`c.into_iter()`** &mdash; 将序列 `c` 转为 **`Iterator`** {{ std(page="std/iter/trait.Iterator.html") }} `i`，并**消耗掉**<sup>*</sup> `c`。要求为 `C` 实现 **`IntoIterator`** {{ std(page="std/iter/trait.IntoIterator.html") }}。条目类型取决于 `C`。获取迭代器的“标准”做法。
+* **`c.iter()`** &mdash; **某些**序列提供的更优方法，返回**借用的**迭代器，不消耗掉 `c`。
+* **`c.iter_mut()`** &mdash; 同上，但返回**可变借用**迭代器来允许改变序列内容。
 
 
-**For Loops**
+**迭代器**
 
-* **`for x in c {}`** &mdash; Syntactic sugar, calls `c.into_iter()` and loops `i` until `None`.
+对于迭代条目 `i`：
+
+* **`i.next()`** &mdash; 如果 `c` 有下一个元素则返回 `Some(x)`，否则返回 `None`。
+
+
+**循环**
+
+* **`for x in c {}`** &mdash; 语法糖。调用 `c.into_iter()` 并循环 `i` 直到 `None`。
 
 
 
 <div class="footnotes">
 
-<sup>*</sup> If it looks as if it doesn't consume `c` that's because your type was `Copy`. For example, if you call `(&c).into_iter()` it will invoke `.into_iter()` on `&c` (which will consume the reference and turn it into an Iterator), but `c` remains untouched.
+<sup>*</sup> 如果 `c` 看似并未被消耗掉，是因为类型实现了 `Copy`。例如，调用 `(&c).into_iter()` 将会在 `&c` 调用 `.into_iter()`（将会消耗掉这个引用并将其转为迭代器），但是剩下的 `c` 不受影响。
 
 </div>
 
@@ -1714,32 +1711,32 @@ Once you have an `i`:
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-trait-iter-2" name="tab-group-trait-iter">
-<label class="tab-label" for="tab-trait-iter-2"><b>Implementing Iterators</b></label>
+<label class="tab-label" for="tab-trait-iter-2"><b>实现迭代器</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
-**Basics**
+**基本用法**
 
-Let's assume you have a `struct C {}` that is your collection.
-
-
-* **`struct Iter {}`** &mdash; Create a struct to hold your iteration status (e.g., an index) for immutable iteration.
-* **`impl Iterator for Iter {}`** &mdash; Provide an implementation of `Iterator::next()` so it can produce elements.
-
-In addition, you might want to add a convenience `fn iter(&self) -> Iter` inside your `impl C {}`.
-
-**Mutable Iterators**
-
-* **`struct IterMut {}`** &mdash; To provide mutable iterators create another struct that can hold `C` as `&mut`.
-* **`impl Iterator for IterMut {}`** &mdash; In that case `Iterator::Item` is probably a `&mut item`
-
-Similarly, providing a `fn iter_mut(&mut self) -> IterMut` might be a good idea.
+假设有一系列的 `struct C {}`。
 
 
-**Making Loops Work**
-* **`impl IntoIterator for C {}`** &mdash; Now `for` loops work as `for x in c {}`.
-* **`impl IntoIterator for &C {}`** &mdash; For conveninece you might want to add these as well.
-* **`impl IntoIterator for &mut C {}`** &mdash; Same ...
+* **`struct Iter {}`** &mdash; 创建用于保存不可变迭代器状态的结构体（比如索引）。
+* **`impl Iterator for Iter {}`** &mdash; 实现 `Iterator::next()` 以产生元素。
+
+此外，可以在 `impl C {}` 里提供一个 `fn iter(&self) -> Iter` 方法。
+
+**可变迭代器**
+
+* **`struct IterMut {}`** &mdash; 创建可变迭代器的结构体，它可以将保存的 `C` 视为 `&mut`。
+* **`impl Iterator for IterMut {}`** &mdash; 这里 `Iterator::Item` 就是个 `&mut item` 了。
+
+类似地，也可以实现一个 `fn iter_mut(&mut self) -> IterMut` 方法。
+
+
+**实现循环**
+* **`impl IntoIterator for C {}`** &mdash; 此时，`for` 循环可以如此使用了 `for x in c {}`。
+* **`impl IntoIterator for &C {}`** &mdash; 为使用方便也可实现这个。
+* **`impl IntoIterator for &mut C {}`** &mdash; 同理……
 
 
 </div></div></div>
@@ -1772,7 +1769,7 @@ Conversions XXX
 ## 字符串转换 {#string-conversions}
 
 
-If you **want** a string of type ...
+将字符串 `x` 转为**目标**类型……
 
 <!-- Create a horizontal scrollable area on small displays to preserve layout-->
 <div style="overflow:auto;">
@@ -2006,11 +2003,11 @@ If you **want** a string of type ...
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-str-9" name="tab-group-str" >
-<label class="tab-label" for="tab-str-9"><b>其他</b></label>
+<label class="tab-label" for="tab-str-9"><code>*const c_char</code></label>
 <div class="tab-panel">
 <div class="tab-content stringconversion-other">
 
-| 你 **想要** | 并且 **拥有** `x` | 转换方法 |
+| **目标**类型 | **源**类型 `x` | 转换方法 |
 | --- | --- | --- |
 |<b>`*const c_char`</b>|<b>`CString`</b>|`x.as_ptr()`|
 
@@ -2026,9 +2023,9 @@ If you **want** a string of type ...
 
 <div class="footnotes">
 
-<sup>1</sup> You should or must (if `unsafe` calls are involved) ensure the raw data comes with a valid representation for the string type (e.g., being UTF-8 encoded data for a `String`).
+<sup>1</sup> 你应当或必须（当调用了 `unsafe` 时）确保裸数据是有效的字符串表示（比如，`String` 是  UTF-8 编码数据）。
 
-<sup>2</sup> Only on some platforms `std::os::<your_os>::ffi::OsStrExt` exists with helper methods to get a raw `&[u8]` representation of the underlying `OsStr`. Use the rest of the table to go from there, e.g.:
+<sup>2</sup> 仅在某些平台上 `std::os::<your_os>::ffi::OsStrExt` 有辅助方法来访问 `OsStr` 的裸 `&[u8]` 表示。所以有时需要手动再转换一遍：
 
 ```
 use std::os::unix::ffi::OsStrExt;
@@ -2036,7 +2033,7 @@ let bytes: &[u8] = my_os_str.as_bytes();
 CString::new(bytes)?
 ```
 
-<sup>3</sup> The `c_char` **must** have come from a previous `CString`. If it comes from FFI see `&CStr` instead.
+<sup>3</sup> `c_char` **必须**由前一个 `CString` 转换而来。如果是从 FFI 来的，则用 `&CStr` 代替。
 
 </div>
 
@@ -2045,8 +2042,7 @@ CString::new(bytes)?
 
 ## 字符串格式化 {#string-formatting}
 
-Formatting applies to `print!`, `eprint!`, `write!` (and their -`ln` siblings like `println!`).
-Each format argument is either empty `{}`, `{argument}`, or follows a basic [**syntax**](https://doc.rust-lang.org/std/fmt/index.html#syntax):
+`print!`、`eprint!`、`write!`（和对应的 -`ln` 宏如 `println!`）都会进行格式化。格式化参数是 `{}`或`{argument}`，或遵循下面的基本[**语法**](https://doc.rust-lang.org/std/fmt/index.html#syntax)：
 
 
 ```
@@ -2055,17 +2051,17 @@ Each format argument is either empty `{}`, `{argument}`, or follows a basic [**s
 
 <div class="header-undefined-color-3">
 
-| Element |  Meaning |
+| 元素 |  含义 |
 |---------| ---------|
-| `argument` |  Number (`0`, `1`, ...) or argument name, e.g., `print!("{x}", x = 3)`. |
-| `fill` | The character to fill empty spaces with (e.g., `0`), if `width` is specified. |
-| `align` | Left (`<`), center (`^`), or right (`>`), if width is specified. |
-| `sign` | Can be `+` for sign to always be printed. |
-| `#` | [Alternate formatting](https://doc.rust-lang.org/std/fmt/index.html#sign0), e.g. prettify Debug `?` or prefix hex with `0x`. |
-| `width` | Minimum width (&geq; 0), padding with `fill` (default to space). If starts with `0`, zero-padded. |
-| `precision` | Decimal digits (&geq; 0) for numerics, or max width for non-numerics. |
-| `$` | Interpret `width` or `precision` as argument identifier instead to allow for dynamic formatting. |
-| `type` | [**Debug**](https://doc.rust-lang.org/std/fmt/trait.Debug.html) (`?`) formatting, hex (`x`), binary (`b`), octal (`o`), pointer (`p`), exp (`e`) ... [see more](https://doc.rust-lang.org/std/fmt/index.html#traits). |
+| `argument` |  数字（`0`、`1`……）或参数名。如 `print!("{x}", x = 3)`。 |
+| `fill` | 当提供了 `width` 时，用于填充空白的字符（如 `0`）。 |
+| `align` | 当提供了 `width` 时，表示左（`<`）、中（`^`）、右（`>`）。 |
+| `sign` | 为 `+` 时表示总是显示正负号。 |
+| `#` | [变体格式化](https://doc.rust-lang.org/std/fmt/index.html#sign0)。如调试信息 `?` 或十六进制 `0x`。 |
+| `width` | 用 `fill` 填充（默认为空格）的最小宽度（&geq; 0）。如果以 `0` 开始则以零填充。 |
+| `precision` | 数字位数（&geq; 0），或非数字的最大宽度。 |
+| `$` | 将 `width` 或 `precision` 解释为参数标识符，以允许动态格式化。 |
+| `type` | [**调试**](https://doc.rust-lang.org/std/fmt/trait.Debug.html)格式化(`?`) 、十六进制(`x`)、二进制(`b`)、八进制(`o`)、指针(`p`)、科学计数法(`e`)……[参见更多](https://doc.rust-lang.org/std/fmt/index.html#traits)。 |
 
 </div>
 
@@ -2077,11 +2073,11 @@ Each format argument is either empty `{}`, `{argument}`, or follows a basic [**s
 
 | 示例 | 说明 |
 |---------|-------------|
-| `{:?}` | Print the next argument using Debug. |
-| `{2:#?}` | Pretty-print the 3rd argument with Debug formatting. |
-| `{val:^2$}` | Center the `val` named argument, width specified by the 3rd argument. |
-| `{:<10.3}` | Left align with width 10 and a precision of 3.|
-| `{val:#x}` | Format `val` argument as hex, with a leading `0x` (alternate format for `x`). |
+| `{:?}` | 打印参数调试信息。 |
+| `{2:#?}` | 打印第三个参数，并格式化成更易读的调试信息。 |
+| `{val:^2$}` | 将具名参数 `val` 居中格式化，宽度由第三个参数指定。 |
+| `{:<10.3}` | 左对齐打印，宽度为 10，小数位 3。|
+| `{val:#x}` | 将参数 `val` 格式化为十六进制，并有前导 `0x`（`x` 的变体格式）。 |
 
 </div>
 
@@ -2099,28 +2095,28 @@ Each format argument is either empty `{}`, `{argument}`, or follows a basic [**s
 
 ## 项目结构 {#project-anatomy}
 
-Basic project layout, and common files and folders, as used by Rust [tooling](#tooling).
+项目结构布局，通用的文件和目录，这是 Rust [工具化](#tooling)的一部分。
 
 <div class="header-red">
 
-| Entry | Code |
+| 文件/目录 | 代码 |
 |--------| ---- |
-| 📁 `benches/` | Benchmarks for your crate, run via `cargo bench`, requires nightly by default. <sup>*</sup> {{ experimental() }} |
-| 📁 `examples/` | Examples how to use your crate, run via `cargo run --example my_example`.  |
-| 📁 `src/` | Actual source code for your project. |
-| {{ tab() }} `build.rs` |  [Pre-build script](https://doc.rust-lang.org/cargo/reference/build-scripts.html), e.g., when compiling C / FFI, needs to be specified in `Cargo.toml`. |
-| {{ tab() }} `main.rs` | Default entry point for applications, this is what `cargo run` uses. |
-| {{ tab() }} `lib.rs` | Default entry point for libraries. This is where lookup for `my_crate::f` starts. |
-| 📁 `tests/` | Integration tests go here, invoked via `cargo test`. Unit tests often stay in `src/` file. |
-| `.rustfmt.toml` | In case you want to [customize](https://rust-lang.github.io/rustfmt/) how `cargo fmt` works. |
-| `.clippy.toml` | Special configuration for certain [clippy lints](https://rust-lang.github.io/rust-clippy/master/index.html). |
-| `Cargo.toml` | Main project configuration. Defines dependencies, artifacts ... |
-| `Cargo.lock` | Dependency details for reproducible builds, recommended to `git` for apps, not for libs. |
+| 📁 `benches/` | crate 的性能测试，用 `cargo bench` 运行，需要 nightly。<sup>*</sup> {{ experimental() }} |
+| 📁 `examples/` | 使用 crate 的例程，用 `cargo run --example my_example` 运行。 |
+| 📁 `src/` | 项目实际源代码。 |
+| {{ tab() }} `build.rs` |  [预编译脚本](https://doc.rust-lang.org/cargo/reference/build-scripts.html)。比如，当编译 C / FFI 时需要在 `Cargo.toml` 中指定的。 |
+| {{ tab() }} `main.rs` | 应用程序默认入口点，即 `cargo run` 运行的。 |
+| {{ tab() }} `lib.rs` | 库默认入口点。从这里开始找 `my_crate::f`。 |
+| 📁 `tests/` | 集成测试，用 `cargo test` 运行。单元测试通常直接写在 `src/`里。 |
+| `.rustfmt.toml` | [自定义](https://rust-lang.github.io/rustfmt/) `cargo fmt` 格式。 |
+| `.clippy.toml` | 特定 [clippy lints](https://rust-lang.github.io/rust-clippy/master/index.html) 配置。 |
+| `Cargo.toml` | 主项目配置。定义依赖、选项等…… |
+| `Cargo.lock` | 可复现构建的依赖详情。建议为应用程序加入 `git` 管理，库则不要。 |
 </div>
 
 <div class="footnotes">
 
-<sup>*</sup> On stable consider [Criterion](https://github.com/bheisler/criterion.rs).
+<sup>*</sup> stable 可以考虑 [Criterion](https://github.com/bheisler/criterion.rs)。
 
 </div>
 
@@ -2130,14 +2126,14 @@ Basic project layout, and common files and folders, as used by Rust [tooling](#t
 <!-- Also not printing this table -->
 <div class="noprint">
 
-Minimal examples for various entry points might look like:
+一个最小的包含各种入口点的例子如下：
 
 <div class="tabs">
 
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-1" name="tab-group-anatomy" checked>
-<label class="tab-label" for="tab-anatomy-1"><b>Applications</b></label>
+<label class="tab-label" for="tab-anatomy-1"><b>应用程序</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2146,7 +2142,7 @@ Minimal examples for various entry points might look like:
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// src/main.rs (default application entry point)
+// src/main.rs (默认应用程序入口点)
 
 fn main() {
     println!("Hello, world!");
@@ -2158,7 +2154,7 @@ fn main() {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-2" name="tab-group-anatomy" >
-<label class="tab-label" for="tab-anatomy-2"><b>Libraries</b></label>
+<label class="tab-label" for="tab-anatomy-2"><b>库</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2167,13 +2163,13 @@ fn main() {
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// src/lib.rs (default library entry point)
+// src/lib.rs (默认库入口点)
 
-pub fn f() {}      // Is a public item in root, so it's accessible from the outside.
+pub fn f() {}      // 根下的公共条目，可被外部访问。
 
 mod m {
-    pub fn g() {}  // No public path (`m` not public) from root, so `g`
-}                  // is not accessible from the outside of the crate.
+    pub fn g() {}  // 根下非公开 (`m` 不公开)，
+}                  // 所以 crate 外不可访问。
 ```
 </div></div></div></div></div>
 
@@ -2181,7 +2177,7 @@ mod m {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-25" name="tab-group-anatomy" >
-<label class="tab-label" for="tab-anatomy-25"><b>Proc Macros</b></label>
+<label class="tab-label" for="tab-anatomy-25"><b>过程宏</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2190,13 +2186,13 @@ mod m {
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// src/lib.rs (default entry point for proc macros)
+// src/lib.rs (默认过程宏入口点)
 
-extern crate proc_macro;  // Apparently needed to be imported like this.
+extern crate proc_macro;  // 需要显式引入
 
 use proc_macro::TokenStream;
 
-#[proc_macro_attribute]   // Can now be used as `#[my_attribute]`
+#[proc_macro_attribute]   // 用法 `#[my_attribute]`
 pub fn my_attribute(_attr: TokenStream, item: TokenStream) -> TokenStream {
     item
 }
@@ -2222,7 +2218,7 @@ crate_type = ["proc-macro"]
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-3" name="tab-group-anatomy" >
-<label class="tab-label" for="tab-anatomy-3"><b>Unit Tests</b></label>
+<label class="tab-label" for="tab-anatomy-3"><b>单元测试</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2231,14 +2227,14 @@ crate_type = ["proc-macro"]
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// src/my_module.rs (any file of your project)
+// src/my_module.rs (项目中的任何文件)
 
 fn f() -> u32 { 0 }
 
 #[cfg(test)]
 mod test {
-    use super::f;           // Need to import items from parent module. Has
-                            // access to non-public members.
+    use super::f;           // 需要从父模块引入
+                            // 可访问非公开成员
     #[test]
     fn ff() {
         assert_eq!(f(), 0);
@@ -2251,7 +2247,7 @@ mod test {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-4" name="tab-group-anatomy" >
-<label class="tab-label" for="tab-anatomy-4"><b>Integration Tests</b></label>
+<label class="tab-label" for="tab-anatomy-4"><b>集成测试</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2260,12 +2256,13 @@ mod test {
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// tests/sample.rs (sample integration test)
+// tests/sample.rs (集成测试样例)
 
 #[test]
 fn my_sample() {
-    assert_eq!(my_crate::f(), 123); // Integration tests (and benchmarks) 'depend' to the crate like
-}                                   // a 3rd party would. Hence, they only see public items.
+    assert_eq!(my_crate::f(), 123); // 集成测试（和性能测试）
+                                    // 取决于 crate 作为第三方提供了什么
+                                    // 仅可访问公开条目
 ```
 </div></div></div></div></div>
 
@@ -2274,7 +2271,7 @@ fn my_sample() {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-anatomy-5" name="tab-group-anatomy" >
-<label class="tab-label" for="tab-anatomy-5"><b>Benchmarks</b></label>
+<label class="tab-label" for="tab-anatomy-5"><b>性能测试</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
@@ -2283,18 +2280,18 @@ fn my_sample() {
 <div style="min-width: 100%; width: 650px;">
 
 ```
-// benches/sample.rs (sample benchmark)
+// benches/sample.rs (性能测试样例)
 
-#![feature(test)]   // #[bench] is still experimental
+#![feature(test)]   // #[bench] 仍是实验性功能
 
-extern crate test;  // Even in '18 this is needed ... for reasons.
-                    // Normally you don't need this in '18 code.
+extern crate test;  // 由于某些原因在 '18 仍需要声明
+                    // 虽然通常在 '18 里并不需要
 
 use test::{black_box, Bencher};
 
 #[bench]
 fn my_algo(b: &mut Bencher) {
-    b.iter(|| black_box(my_crate::f())); // `black_box` prevents `f` from being optimized away.
+    b.iter(|| black_box(my_crate::f())); // `black_box` 避免 `f` 被优化
 }
 ```
 </div></div></div></div></div>
@@ -2311,29 +2308,29 @@ fn my_algo(b: &mut Bencher) {
 
 ## Cargo
 
-Some commands and tools that are good to know.
+Cargo 的常用命令和工具。
 
 
 <div class="header-tooling">
 
-| Command | Description |
+| 命令 | 说明 |
 |--------| ---- |
-| `cargo init` | Create a new project for the latest edition. |
-| <code>cargo <span class="cargo-prefix">b</span>uild</code> | Build the project in debug mode (`--release` for all optimization). |
-| <code>cargo <span class="cargo-prefix">c</span>heck</code> | Check if project would compile (much faster). |
-| <code>cargo <span class="cargo-prefix">t</span>est</code> | Run tests for the project. |
-| <code>cargo <span class="cargo-prefix">r</span>un</code> | Run your project, if a binary is produced (main.rs). |
-| <code>cargo doc --open</code> | Locally generate documentation for your code and dependencies. |
-| `cargo rustc -- -Zunpretty=X` | Show more desugared Rust code, in particular with X being: |
-| {{ tab() }} `expanded` |  Show with expanded macros, ... |
-| <code>cargo +{nightly, stable} ...</code>  | Runs command with given toolchain, e.g., for 'nightly only' tools. |
-| `rustup docs` | Open offline Rust documentation (incl. the books), good on a plane! |
+| `cargo init` | 在最新的版本上创建新项目。 |
+| <code>cargo <span class="cargo-prefix">b</span>uild</code> | 调试模式构建项目。（`--release` 开启所有优化）。 |
+| <code>cargo <span class="cargo-prefix">c</span>heck</code> | 检查项目是否可以编译（更快）。 |
+| <code>cargo <span class="cargo-prefix">t</span>est</code> | 运行项目测试。 |
+| <code>cargo <span class="cargo-prefix">r</span>un</code> | 运行项目。仅当生成了二进制文件（main.rs）。 |
+| <code>cargo doc --open</code> | 生成项目代码和依赖的本地文档。 |
+| `cargo rustc -- -Zunpretty=X` | 显示预处理过后的 Rust 代码。特别地，当 X 为： |
+| {{ tab() }} `expanded` |  将展开所有宏…… |
+| <code>cargo +{nightly, stable} ...</code>  | 以给定的工具链运行命令。比如仅 “nightly only” 的工具。 |
+| `rustup docs` | 打开离线 Rust 文档（包括《Rust 程序设计语言》）。在飞机上也可以编程！ |
 
 </div>
 
 <div class="footnotes">
 
-A command like <code>cargo <span class="cargo-prefix">b</span>uild</code> means you can either type `cargo build` or just `cargo b`.
+命令如 <code>cargo <span class="cargo-prefix">b</span>uild</code> 表示 `cargo build` 或 `cargo b` 都有效。
 
 </div>
 
@@ -2341,22 +2338,21 @@ A command like <code>cargo <span class="cargo-prefix">b</span>uild</code> means 
 {{ tablesep() }}
 
 
-These are optional `rustup` components.
-Install them with `rustup component add [tool]`.
+`rustup` 的可选组件。用 `rustup component add [tool]` 安装。
 
 
 <div class="header-tooling">
 
-| Tool | Description |
+| 工具 | 说明 |
 |--------| ---- |
-| `cargo clippy` | Additional ([lints](https://rust-lang.github.io/rust-clippy/master/)) catching common API misuses and unidiomatic code. {{ link(url = "https://github.com/rust-lang/rust-clippy") }} |
-| `cargo fmt` | Automatic code formatter (`rustup component add rustfmt`). {{ link(url = "https://github.com/rust-lang/rustfmt") }} |
+| `cargo clippy` | 额外([lints](https://rust-lang.github.io/rust-clippy/master/)) 检查通用 API 误用和非惯用代码。{{ link(url = "https://github.com/rust-lang/rust-clippy") }} |
+| `cargo fmt` | 自动代码格式化。(`rustup component add rustfmt`) {{ link(url = "https://github.com/rust-lang/rustfmt") }} |
 
 </div>
 
 {{ tablesep() }}
 
-A large number of additional cargo plugins [**can be found here**](https://crates.io/categories/development-tools::cargo-plugins?sort=downloads).
+更多 cargo 插件可以在[**这里**](https://crates.io/categories/development-tools::cargo-plugins?sort=downloads) 找到。
 
 
 {{ tablesep() }}
@@ -2370,39 +2366,37 @@ A large number of additional cargo plugins [**can be found here**](https://crate
 <div style="overflow:auto;">
 <div style="min-width: 100%; width: 650px;">
 
-🔘 Check [target is supported](https://forge.rust-lang.org/release/platform-support.html).
+🔘 检查[目标是否支持](https://forge.rust-lang.org/release/platform-support.html)。
 
-🔘 Install target via **`rustup target install X`**.
+🔘 安装目标依赖：**`rustup target install X`**。
 
-🔘 Install native toolchain (required to _link_, depends on target).
+🔘 安装本地工具链（取决于目标可能需要**链接**）。
 
-Get this from your target vendor (Google, Apple, ...).
-Might not be available for your host (e.g., no iOS toolchain for Windows).
+应从目标供应商（Google、Apple 等）获取这些资源。也可能不支持本地宿主环境（比如，Windows 不支持 iOS 工具链）。
 
-**Some toolchains require additional build steps** (e.g., Android's `make-standalone-toolchain.sh`).
+**某些工具链需要额外的构建步骤**（比如 Android 的 `make-standalone-toolchain.sh`）。
 
-🔘 Update **`~/cargo/.config`** like this:
+🔘 修改 **`~/cargo/.config`** 如下：
 
 ```
 [target.aarch64-linux-android]
 linker = "[PATH_TO_TOOLCHAIN]/aarch64-linux-android/bin/aarch64-linux-android-clang"
 ```
 
-   or
+   或
 
 ```
 [target.aarch64-linux-android]
 linker = "C:/[PATH_TO_TOOLCHAIN]/prebuilt/windows-x86_64/bin/aarch64-linux-android21-clang.cmd"
 ```
 
-Sometimes (depending on how compiler complains) you might also need to set an environment variable. Note that some platforms / configuration can be
-**extremely** sensitive how paths are specified (e.g., `\` vs `/`) and quoted:
+取决于编译器警告，有时需要设置环境变量。某些平台和配置可能对路径或引号**非常**敏感（比如 `\` 对 `/`）：
 
 ```
 set CC=C:\[PATH_TO_TOOLCHAIN]\prebuilt\windows-x86_64\bin\aarch64-linux-android21-clang.cmd
 ```
 
-✔️ Compile with **`cargo build --target=X`**
+✔️ 用 **`cargo build --target=X`** 编译。
 
 
 <!-- End overflow area -->
@@ -2421,34 +2415,34 @@ set CC=C:\[PATH_TO_TOOLCHAIN]\prebuilt\windows-x86_64\bin\aarch64-linux-android2
 
 ## Rust 惯用法 {#idiomatic-rust}
 
-If you are used to programming Java or C, consider these.
+Java 或 C 的使用者需要转换下思维：
 
 <div class="header-blue">
 
-| Idiom | Code |
+| 习语 | 代码 |
 |--------| ---- |
-| **Think in Expressions** | `x = if x { a } else { b };` |
+| **用表达式思考** | `x = if x { a } else { b };` |
 |  | `x = loop { break 5 };`  |
 |  | `fn f() -> u32 { 0 }`  |
-| **Think in Iterators** | `(1..10).map(f).collect()` |
+| **用迭代器思考** | `(1..10).map(f).collect()` |
 |  | <code>names.iter().filter(&vert;x&vert; x.starts_with("A"))</code> |
-| **Handle Absence with `?`** | `x = try_something()?;` |
+| **用 `?` 捕获异常** | `x = try_something()?;` |
 |  | `get_option()?.run()?` |
-| **Use Strong Types** | `enum E { Invalid, Valid { ... } }` over `ERROR_INVALID = -1` |
-|  | `enum E { Visible, Hidden }` over `visible: bool` |
-|  | `struct Charge(f32)` over `f32` |
-| **Provide Builders** | `Car::new("Model T").hp(20).run();` |
-| **Split Implementations** | Generic types `S<T>` can have a separate `impl` per `T`. |
-|   | Rust doesn't have OO, but with separate `impl` you can get specialization. |
-| **Unsafe** | Avoid `unsafe {}`, often safer, faster solution without it. Exception: FFI. |
-| **Implement Traits** | `#[derive(Debug, Copy, ...)]` and custom `impl` where needed.|
-| **Tooling** | With [**clippy**](https://github.com/rust-lang/rust-clippy) you can improve your code quality. |
-|  | Formatting with [**rustfmt**](https://github.com/rust-lang/rustfmt) helps others to read your code. |
-|  | Add **unit tests** {{ book(page="ch11-01-writing-tests.html") }} (`#[test]`) to ensure your code works. |
-|  | Add **doc tests** {{ book(page="ch14-02-publishing-to-crates-io.html") }} (` ``` my_api::f() ``` `) to ensure docs match code. |
-| **Documentation** | Annotate your APIs with doc comments that can show up on [**docs.rs**](https://docs.rs). |
-|  | Don't forget to include a **summary sentence** and the **Examples** heading. |
-|  | If applicable: **Panics**, **Errors**, **Safety**, **Abort** and **Undefined Behavior**. |
+| **使用农耕强类型** | `enum E { Invalid, Valid { ... } }` 之于 `ERROR_INVALID = -1` |
+|  | `enum E { Visible, Hidden }` 之于 `visible: bool` |
+|  | `struct Charge(f32)` 之于 `f32` |
+| **提供生成器** | `Car::new("Model T").hp(20).run();` |
+| **分离实现** | 泛型 `S<T>` 可以对每个 `T` 都有不同的实现。 |
+|   | Rust 没有面向对象，但通过 `impl` 可以实现特化。 |
+| **Unsafe** | 尽量避免 `unsafe {}`，因为总是会有更快更安全的解决方案的。除了 FFI。 |
+| **实现 Trait** | `#[derive(Debug, Copy, ...)]`。根据需要实现 `impl`。|
+| **工具化** | 利用 [**clippy**](https://github.com/rust-lang/rust-clippy) 可以提升代码质量。 |
+|  | 用 [**rustfmt**](https://github.com/rust-lang/rustfmt) 格式化可以帮助别人看懂你的代码。 |
+|  | 添加**单元测试**{{ book(page="ch11-01-writing-tests.html") }}(`#[test]`)，确保代码正常运行。 |
+|  | 添加**文档测试**{{ book(page="ch14-02-publishing-to-crates-io.html") }}(` ``` my_api::f() ``` `)，确保文档匹配代码。 |
+| **文档** | 以文档注解的 API 可显示在 [**docs.rs**](https://docs.rs) 上。 |
+|  | 不要忘记在开始加上**总结句**和**例程**。 |
+|  | 如果有这些也加上：**Panics**、**Errors**、**Safety**、**Abort** 和**未定义行为**。 |
 
 </div>
 
@@ -2456,9 +2450,9 @@ If you are used to programming Java or C, consider these.
 
 {{ tablesep() }}
 
-> 🔥 We **highly** recommend you also follow the
-> [**API Guidelines**](https://rust-lang.github.io/api-guidelines/) ([**Checklist**](https://rust-lang.github.io/api-guidelines/checklist.html))
-> for any shared project! 🔥
+> 🔥 **强烈**建议对所有共享项目都遵循
+> [**API 指南**](https://rust-lang.github.io/api-guidelines/)（[**检查列表**](https://rust-lang.github.io/api-guidelines/checklist.html)）
+> ！ 🔥
 
 
 {{ tablesep() }}
@@ -2467,11 +2461,11 @@ If you are used to programming Java or C, consider these.
 
 ## Async-Await 101
 
-If you are familiar with async / await in C# or TypeScript, here are some things to keep in mind:
+类似于 C# 或 TypeScript 的 async / await，但又有所不同：
 
 <div class="header-orange">
 
-| Construct | Explanation |
+| 语法 | 说明 |
 |---------|-------------|
 | `async`  | Anything declared `async` always returns an `impl Future<Output=_>`. {{ std(page="std/future/trait.Future.html") }} |
 | {{ tab() }} `async fn f() {}`  | Function `f` returns an `impl Future<Output=()>`. |
@@ -2548,7 +2542,7 @@ This leads to the following considerations when writing code inside an `async` c
 <div class="header-orange">
 
 
-| Constructs {{ note(note="1") }} | Explanation |
+| 语法 {{ note(note="1") }} | 说明 |
 |---------|-------------|
 | `sleep_or_block();` | Definitely bad {{ bad() }}, never halt current thread, clogs executor. |
 | `set_TL(a); x.await; TL();` | Definitely bad {{ bad() }}, `await` may return from other thread, [thread local](https://doc.rust-lang.org/std/macro.thread_local.html) invalid. |
