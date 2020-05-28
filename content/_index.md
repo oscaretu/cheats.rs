@@ -2042,7 +2042,7 @@ CString::new(bytes)?
 
 ## 字符串格式化 {#string-formatting}
 
-`print!`、`eprint!`、`write!`（和对应的 -`ln` 宏如 `println!`）都会进行格式化。格式化参数是 `{}`或`{argument}`，或遵循下面的基本[**语法**](https://doc.rust-lang.org/std/fmt/index.html#syntax)：
+`print!`、`eprint!`、`write!`（这些宏和对应的 -`ln` 宏，如 `println!`）都会格式化。格式化参数是 `{}` 或 `{argument}`，或遵循下面的基本[**语法**](https://doc.rust-lang.org/std/fmt/index.html#syntax)：
 
 
 ```
@@ -2428,7 +2428,7 @@ Java 或 C 的使用者需要转换下思维：
 |  | <code>names.iter().filter(&vert;x&vert; x.starts_with("A"))</code> |
 | **用 `?` 捕获异常** | `x = try_something()?;` |
 |  | `get_option()?.run()?` |
-| **使用农耕强类型** | `enum E { Invalid, Valid { ... } }` 之于 `ERROR_INVALID = -1` |
+| **使用强类型** | `enum E { Invalid, Valid { ... } }` 之于 `ERROR_INVALID = -1` |
 |  | `enum E { Visible, Hidden }` 之于 `visible: bool` |
 |  | `struct Charge(f32)` 之于 `f32` |
 | **提供生成器** | `Car::new("Model T").hp(20).run();` |
@@ -2438,8 +2438,8 @@ Java 或 C 的使用者需要转换下思维：
 | **实现 Trait** | `#[derive(Debug, Copy, ...)]`。根据需要实现 `impl`。|
 | **工具化** | 利用 [**clippy**](https://github.com/rust-lang/rust-clippy) 可以提升代码质量。 |
 |  | 用 [**rustfmt**](https://github.com/rust-lang/rustfmt) 格式化可以帮助别人看懂你的代码。 |
-|  | 添加**单元测试**{{ book(page="ch11-01-writing-tests.html") }}(`#[test]`)，确保代码正常运行。 |
-|  | 添加**文档测试**{{ book(page="ch14-02-publishing-to-crates-io.html") }}(` ``` my_api::f() ``` `)，确保文档匹配代码。 |
+|  | 添加**单元测试** {{ book(page="ch11-01-writing-tests.html") }}（`#[test]`），确保代码正常运行。 |
+|  | 添加**文档测试** {{ book(page="ch14-02-publishing-to-crates-io.html") }}（` ``` my_api::f() ``` `），确保文档匹配代码。 |
 | **文档** | 以文档注解的 API 可显示在 [**docs.rs**](https://docs.rs) 上。 |
 |  | 不要忘记在开始加上**总结句**和**例程**。 |
 |  | 如果有这些也加上：**Panics**、**Errors**、**Safety**、**Abort** 和**未定义行为**。 |
@@ -2467,25 +2467,22 @@ Java 或 C 的使用者需要转换下思维：
 
 | 语法 | 说明 |
 |---------|-------------|
-| `async`  | Anything declared `async` always returns an `impl Future<Output=_>`. {{ std(page="std/future/trait.Future.html") }} |
-| {{ tab() }} `async fn f() {}`  | Function `f` returns an `impl Future<Output=()>`. |
-| {{ tab() }} `async fn f() -> S {}`  | Function `f` returns an `impl Future<Output=S>`. |
-| {{ tab() }} `async { x }`  | Transforms `{ x }` into an `impl Future<Output=X>`. |
-| `let sm = f();   ` | Calling `f()` that is `async` will **not** execute `f`, but produce state machine `sm`. {{ note(note="1") }} |
-| {{ tab() }} `sm = async { g() };`  | Likewise, does **not** execute the `{ g() }` block; produces state machine. |
-| `runtime.block_on(sm);` {{ note(note="2") }}  | Outside an `async {}`, schedules `sm` to actually run. Would execute `g()`. |
-| `sm.await` | Inside an `async {}`, run `sm` until complete. Yield to runtime if `sm` not ready. |
+| `async`  | 所有声明 `async` 的都会返回 `impl Future<Output=_>`。{{ std(page="std/future/trait.Future.html") }} |
+| {{ tab() }} `async fn f() {}`  | 函数 `f` 返回 `impl Future<Output=()>`。 |
+| {{ tab() }} `async fn f() -> S {}`  | 函数 `f` 返回 `impl Future<Output=S>`。 |
+| {{ tab() }} `async { x }`  | 将 `{ x }` 转换为 `impl Future<Output=X>`。 |
+| `let sm = f();   ` | 调用 `async f()` **不会**执行 `f`，但会产生状态机 `sm`。{{ note(note="1") }} |
+| {{ tab() }} `sm = async { g() };`  | 同上，**不会**执行代码块 `{ g() }`，但会产生状态机。 |
+| `runtime.block_on(sm);` {{ note(note="2") }}  | 在 `async {}` 外部，将 `sm` 置为实际运行态。会执行 `g()`。 |
+| `sm.await` | 在 `async {}` 内部，运行 `sm` 直到完成。若 `sm` 未就绪，则 yield 到当前运行时。 |
 
 </div>
 
 
 <div class="footnotes">
 
-{{ note(note="1") }} Technically `async` transforms the following code into an anonymous, compiler-generated state machine type, and `f()` instantiates that machine.
-The state machine always `impl Future`, possibly `Send<` & co, depending on types you used inside `async`. State machine driven by worker thread invoking
-`Future::poll()` via runtime directly, or parent `.await` indirectly. <br>
-{{ note(note="2") }} Right now Rust doesn't come with its own runtime. Use external crate instead, such as [async-std](https://github.com/async-rs/async-std) or [tokio 0.2+](https://crates.io/crates/tokio).
-Also, Futures in Rust are an MPV. There is **much** more utility stuff in the [futures crate](https://github.com/rust-lang-nursery/futures-rs).
+{{ note(note="1") }} 技术上，`async` 会将接下来的代码转换为匿名编译器生成状态机类型，并由 `f()` 实例化该状态机。状态机总是 `impl Future` 的。取决于 `async` 内部使用的类型也可以是 `Send<` 的。状态机由运行时工作线程通过调用 `Future::poll()` 直接管理，或者父级的 `.await` 间接管理。<br>
+{{ note(note="2") }} 目前 Rust 不自带运行时。可用第三方 crate，比如 [async-std](https://github.com/async-rs/async-std) 或 [tokio 0.2+](https://crates.io/crates/tokio)。另外，Future 在 Rust 中用法多种多样。参见这里的**许多** [futures crate](https://github.com/rust-lang-nursery/futures-rs) 工具库。
 
 </div>
 
@@ -2508,12 +2505,11 @@ Futures as seen by someone who authors `async f() {}`:
 - If control passed to `x` via `x.await`, worker thread continues with that one instead.
 - At some point a low-level state machine invoked via `.await` might not be ready. In that the case worker thread returns all the way up to runtime so it can drive another Future. -->
 
-At each `x.await`, state machine passes control to subordinate state machine `x`. At some point a low-level state machine invoked via `.await` might not be ready. In that the case worker
-thread returns all the way up to runtime so it can drive another Future. Some time later the runtime:
-- **might** resume execution. It usually does, unless `sm` / `Future` dropped.
-- **might** resume with the previous worker **or another** worker thread (depends on runtime).
+对每个 `x.await`，状态机将会通过控制转移到状态机 `x`。有时，由 `.await` 调用的低级状态机并未就绪，此时，工作线程直接返回到运行时，以使得它可以驱动另一个 Future。一段时间后，运行时：
+- **可能**恢复执行。常见于此，除非 `sm` / `Future` 已析构。
+- **可能**由前一个**或另一个**工作线程恢复执行（取决于运行时）。
 
-Simplified diagram for code written inside an `async` block :
+`async` 代码块内部代码的简易流程图如下：
 
 
 <!-- Create a horizontal scrollable area on small displays to preserve layout-->
@@ -2523,13 +2519,13 @@ Simplified diagram for code written inside an `async` block :
 ```
        consecutive_code();           consecutive_code();           consecutive_code();
 START --------------------> x.await --------------------> y.await --------------------> READY
-// ^                          ^     ^                               Future<Output=X> ready -^
-// Invoked via runtime        |     |
-// or an external .await      |     This might resume on another thread (next best available),
-//                            |     or NOT AT ALL if Future was dropped.
+// ^                          ^     ^                               Future<Output=X> 就绪 -^
+// 由运行时调用                 |     |
+// 或由外部 .await 调用         |     会由另一个线程恢复（下一个最佳可用的），
+//                            |     或者当 Future 已析构时根本不会执行。
 //                            |
-//                            Execute `x`. If ready: just continue execution; if not, return
-//                            this thread to runtime.
+//                            执行 `x`。若已就绪，则继续执行。
+//                            若未就绪，返回当前线程到运行时。
 ```
 
 </div>
@@ -2537,26 +2533,25 @@ START --------------------> x.await --------------------> y.await --------------
 
 {{ tablesep() }}
 
-This leads to the following considerations when writing code inside an `async` construct:
+这导致编写 `async` 时有以下注意事项：
 
 <div class="header-orange">
 
 
 | 语法 {{ note(note="1") }} | 说明 |
 |---------|-------------|
-| `sleep_or_block();` | Definitely bad {{ bad() }}, never halt current thread, clogs executor. |
-| `set_TL(a); x.await; TL();` | Definitely bad {{ bad() }}, `await` may return from other thread, [thread local](https://doc.rust-lang.org/std/macro.thread_local.html) invalid. |
-| `s.no(); x.await; s.go();` | Maybe bad {{ bad() }}, `await` will [not return](http://www.randomhacks.net/2019/03/09/in-nightly-rust-await-may-never-return/) if `Future` dropped while waiting. {{ note(note="2") }} |
-| `Rc::new(); x.await; rc();` | Non-`Send` types prevent `impl Future` from being `Send`; less compatible. |
+| `sleep_or_block();` | 显然不对{{ bad() }}，当前线程永不终止，阻碍执行器。 |
+| `set_TL(a); x.await; TL();` | 显然不对{{ bad() }}，`await` 会由其他线程返回，[thread local](https://doc.rust-lang.org/std/macro.thread_local.html) 无效。 |
+| `s.no(); x.await; s.go();` | 可能不对{{ bad() }}，如果等待时 `Future` 被析构，则 `await` [不会返回](http://www.randomhacks.net/2019/03/09/in-nightly-rust-await-may-never-return/)。{{ note(note="2") }} |
+| `Rc::new(); x.await; rc();` | 非 `Send` 类型拒绝实现 `impl Future`。兼容性差。 |
 
 </div>
 
 <div class="footnotes">
 
-{{ note(note="1") }} Here we assume `s` is any non-local that could temporarily be put into an invalid state;
-`TL` is any thread local storage, and that the `async {}` containing the code is written
-without assuming executor specifics. <br/>
-{{ note(note="2") }} Since [Drop](https://doc.rust-lang.org/std/ops/trait.Drop.html) is run in any case when `Future` is dropped, consider using drop guard that cleans up / fixes application state if it has to be left in bad condition across `.await` points.
+{{ note(note="1") }} 假设 `s` 是非局部可临时进入无效状态的任意变量。
+`TL` 是局部保存的线程，`async {}` 包含未保证执行约束的代码。<br/>
+{{ note(note="2") }} 因为当 `Future` 被析构后，[Drop](https://doc.rust-lang.org/std/ops/trait.Drop.html) 可能会在任何情况下执行到。如果必须使 `.await` 保持在这种状态的话，考虑用 drop guard 来清理或者修复应用程序状态。
 
 </div>
 
@@ -2567,27 +2562,23 @@ without assuming executor specifics. <br/>
 
 ## 闭包 API {#closures-in-apis}
 
-There is a subtrait relationship `Fn` : `FnMut` : `FnOnce`. That means, a closure that
-implements `Fn`, also implements `FnMut` and `FnOnce`. Likewise, a closure
-that implements `FnMut`, also implements `FnOnce`.
+这些子 trait 的关系是 `Fn` : `FnMut` : `FnOnce`。即一个实现了 `Fn` 的闭包，也同时实现了 `FnMut` 和 `FnOnce`。同样地，实现了 `FnMut` 的闭包，也必然实现了 `FnOnce`。
 
-From a call site perspective that means:
+从调用者的角度来看这意味着：
 
 <div class="header-green">
 
-| Signature | Function `g` can call ... |  Function `g` accepts ... |
+| 签名 | 函数 `g` 可以调用什么 |  函数 `g` 可以接受什么参数 |
 |--------| -----------| -----------|
-| `g<F: FnOnce()>(f: F)`  | ... `f()` once. |  `Fn`, `FnMut`, `FnOnce`  |
-| `g<F: FnMut()>(mut f: F)`  | ... `f()` multiple times. | `Fn`, `FnMut` |
-| `g<F: Fn()>(f: F)`  | ... `f()` multiple times.  | `Fn` |
+| `g<F: FnOnce()>(f: F)`  | ... `f()` 一次 |  `Fn`, `FnMut`, `FnOnce`  |
+| `g<F: FnMut()>(mut f: F)`  | ... `f()` 多次 | `Fn`, `FnMut` |
+| `g<F: Fn()>(f: F)`  | ... `f()` 多次  | `Fn` |
 
 </div>
 
 <div class="footnotes">
 
-Notice how **asking** for a `Fn` closure as a function is
-most restrictive for the caller; but **having** a `Fn`
-closure as a caller is most compatible with any function.
+注意，对调用者来说，如何**确定** `Fn` 闭包，是最为严格的。但是一个**包含** `Fn` 的闭包，对调用者来説，是对任意函数都最兼容的。
 
 </div>
 
@@ -2595,38 +2586,35 @@ closure as a caller is most compatible with any function.
 
 {{ tablesep() }}
 
-From the perspective of someone defining a closure:
+站在定义闭包的角度来看：
 
 <div class="header-green">
 
-| Closure | Implements<sup>*</sup> | Comment |
+| 闭包 | 实现<sup>*</sup> | 说明 |
 |--------| -----------| --- |
-| <code> &vert;&vert; { moved_s; } </code> | `FnOnce` | Caller must give up ownership of `moved_s`. |
-| <code> &vert;&vert; { &mut s; } </code> | `FnOnce`, `FnMut` | Allows `g()` to change caller's local state `s`. |
-| <code> &vert;&vert; { &s; } </code> | `FnOnce`, `FnMut`, `Fn` | May not mutate state; but can share and reuse `s`. |
+| <code> &vert;&vert; { moved_s; } </code> | `FnOnce` | 调用者必须放弃 `moved_s` 的所有权。 |
+| <code> &vert;&vert; { &mut s; } </code> | `FnOnce`, `FnMut` | 允许 `g()` 改变调用者的局部状态 `s`。 |
+| <code> &vert;&vert; { &s; } </code> | `FnOnce`, `FnMut`, `Fn` | 可能不会导致状态改变，但可能会共享和重用 `s`。 |
 
 </div>
 
 <div class="footnotes">
 
-<sup>*</sup> Rust [prefers capturing](https://doc.rust-lang.org/stable/reference/expressions/closure-expr.html) by reference
-(resulting in the most "compatible" `Fn` 闭包 from a caller perspective), but can be
-forced to capture its environment by copy or move via the
-`move || {}` syntax.
+<sup>*</sup> Rust [偏向于以索引捕获](https://doc.rust-lang.org/stable/reference/expressions/closure-expr.html)（在调用者视角上最“兼容” `Fn` 的闭包），但也可以用 `move || {}` 语法通过复制或者移动捕获相关环境变量。。
 
 </div>
 
 {{ tablesep() }}
 
-That gives the following advantages and disadvantages:
+这会带来如下优势和劣势：
 
 <div class="header-green">
 
-| Requiring | Advantage | Disadvantage |
+| 要求 | 优势 | 劣势 |
 |--------| -----------| -----------|
-| `F: FnOnce`  | <span class="good">Easy to satisfy as caller.</span> | <span class="bad">Single use only, `g()` may call `f()` just once.</span> |
-| `F: FnMut`  | <span class="good">Allows `g()` to change caller state.</span> | <span class="bad">Caller may not reuse captures during `g()`.</span> |
-| `F: Fn`  | <span class="good">Many can exist at same time.</span> | <span class="bad">Hardest to produce for caller.</span> |
+| `F: FnOnce`  | <span class="good">容易满足调用者。</span> | <span class="bad">仅用一次，`g()` 仅会调用 `f()` 一次。</span> |
+| `F: FnMut`  | <span class="good">允许 `g()` 改变调用者状态。</span> | <span class="bad">调用者不能在 `g()` 期间重用捕获。</span> |
+| `F: Fn`  | <span class="good">可同时存在多个。</span> | <span class="bad">最难由调用者生成。</span> |
 
 </div>
 
@@ -2636,43 +2624,43 @@ That gives the following advantages and disadvantages:
 
 ## 理解生命周期 {#reading-lifetimes}
 
-Lifetimes can be overwhelming at times. Here is a simplified guide on how to read and interpret constructs containing lifetimes if you are familiar with C.
+生命周期有时难以理解。这里给出一个简易指南，指导 C 经验者如何阅读和翻译包含生命周期声明的代码。
 
 <div class="header-magenta">
 
-| Construct | How to read |
+| 写法 | 念法 |
 |--------| -----------|
-| `let s: S = S(0)`  | A location that is `S`-sized, named `s`, and contains the value `S(0)`.|
-|   | If declared with `let`, that location lives on the stack. {{ note( note="1") }} |
-|   | Generally, `s` can mean _location of `s`_, and _value within `s`_. |
-|   | As a location, `s = S(1)` means, assign value `S(1)` to location `s`. |
-|   | As a value, `f(s)` means call `f` with value inside of `s`. |
-|   | To explicitly talk about its location (address) we do `&s`. |
-|   | To explicitly talk about a location that can hold such a location we do `&S`. |
-| `&'a S`  | A `&S` is a **location that can hold** (at least) **an address**, called reference. |
-|   | Any address stored in here must be that of a valid `S`. |
-|   | Any address stored must be proven to exist for at least (_outlive_) duration `'a`. |
-|   | In other words, the `&S` part sets bounds for what any address here must contain. |
-|   | While the `&'a` part sets bounds for how long any such address must at least live. |
-|   | The lifetime our containing location is unrelated, but naturally always shorter. |
-|   | Duration of `'a` is purely compile time view, based on static analysis. |
-| `&S`  | Sometimes `'a` might be elided (or can't be specified) but it still exists. |
-|   | Within methods bodies, lifetimes are determined automatically. |
-|   | Within signatures, lifetimes may be 'elided' (annotated automatically). |
-|  `&s` | This will produce the **actual address of location `s`**, called 'borrow'. |
-|   | The moment `&s` is produced, location `s` is put into a **borrowed state**. |
-|   | Checking if in borrowed state is based on compile-time analysis. |
-|   | This analysis is based on all possible address propagation paths. |
-|   | As long as **any** `&s` could be around, `s` cannot be altered directly. |
-|   | For example, in `let a = &s; let b = a;`, also `b` needs to go. |
-|   | Borrowing of `s` stops once last `&s` is last used, not when `&s` dropped. |
-| `&mut s` | Same, but will produce a mutable borrow. |
-|   | A `&mut` will allow the *owner of the borrow* (address) to change `s` content. |
-|   | This reiterates that not the value in `s`, but location of `s` is borrowed. |
+| `let s: S = S(0)`  | 一块 `S` 大小的空间，叫做 `s`。包含一个 `S(0)` 的值。 |
+|   | 如果用 `let` 声明，这块空间将生存在栈上。{{ note( note="1") }} |
+|   | 通常，`s` 表示 **`s` 的位置** 和 **`s` 里面的值**。 |
+|   | 作为位置，`s = S(1)` 表示分配值 `S(1)` 到位置 `s`。 |
+|   | 作为值，`f(s)` 表示用 `s` 里面的值调用 `f`。 |
+|   | 当明确表示其位置（地址）时使用 `&s`。 |
+|   | 当明确表示用于保存这样一个位置的位置时，使用 `&S`。 |
+| `&'a S`  | `&S` 是（至少）**可以保存一个地址的位置**，叫做引用。 |
+|   | 存在这里的任意地址，都一定指向有效的 `S`。 |
+|   | 存在这里的任意地址必须被证明其生命周期不短于(_outlive_) `'a`。 |
+|   | 换言之，`&S` 部分限定了这里包含的任意地址的范围。 |
+|   | `&'a` 部分限定了地址至少生存的时间。 |
+|   | 包含的位置与生命周期并不相干，但总比它短。 |
+|   | `'a` 仅在编译时期可见，由完全的静态分析得出。 |
+| `&S`  | 有时 `'a` 会被省略（或者不能被指定），但它仍然存在。 |
+|   | 在方法体中，生命周期可以自动确定。 |
+|   | 在签名中，生命周期可以被“省略”（自动标注）。 |
+|  `&s` | 会产生**位置 `s` 的实际地址**，叫做“借用”。 |
+|   | 一旦 `&s` 产生，位置 `s` 就会进入**被借用状态**。 |
+|   | 检查是否处于被借用状态取决于编译期分析。 |
+|   | 分析取决于可能的地址传播路径。 |
+|   | 只要**任意** `&s` 存在，那么 `s` 就不能被直接改变。 |
+|   | 例如，`let a = &s; let b = a;` 中的 `b`。 |
+|   | 借用 `s` 会持续到 `&s` 最后一次使用，并非 `&s` 析构时。 |
+| `&mut s` | 同上，但产生可变借用。 |
+|   | `&mut` 允许**借用的所有者**（地址）改变 `s` 的内容。 |
+|   | 这里不是指 `s` 中的值，而是 `s` 的位置本身被借用了。 |
 
 <div class="footnotes">
 
-<sup>1</sup> Compare [Data Structures](#data-structures) section above: while true for synchronous code, an `async` 'stack frame' might actually be placed on to the heap by the used async runtime.
+<sup>1</sup> 与上面的[数据结构](#data-structures)一节比较：对于同步代码显然如此。对于 `async` 来说，“栈帧”可能存储在堆上，并且取决于运行时的实现。
 
 </div>
 
@@ -2680,29 +2668,29 @@ Lifetimes can be overwhelming at times. Here is a simplified guide on how to rea
 
 {{ tablesep() }}
 
-When reading function or type signatures in particular:
+阅读函数或类型签名也有套路：
 
-| Construct | How to read |
+| 写法 | 念法 |
 |--------| -----------|
-| `S<'a> {}` | Signals that `S` will contain{{ note( note="*") }} at least one address (i.e., reference). |
-|  | `'a` will be determined automatically by the user of this struct. |
-|  | `'a` will be chosen as small as possible. |
-| `f<'a>(x: &'a T)`  | Signals this function will accept an address (i.e., reference). |
-| {{ tab() }} {{ tab() }} {{ tab() }} {{ tab() }} `-> &'a S` | ... and that it returns one. |
-|   | `'a` will be determined automatically by the caller. |
-|   | `'a` will be chosen as small as possible. |
-|   | `'a` will be picked so that it **satisfies input and output** at call site. |
-|   | More importantly, **propagate borrow state** according to lifetime names! |
-|   | So while result address with `'a` is used, input address with `'a` is locked.  |
-|   | Here: while `s` from `let s = f(&x)` is around, `x` counts as 'borrowed'. |
-| `<'a, 'b: 'a>` | The lifetimes declared in `S<>` and `f<>` can also have bounds. |
-|  | The `<'a, 'b>` part means the type will handle at least 2 addresses. |
-|  | The `'b: 'a` part is a **lifetime bound**, and means `'b` must **outlive** `'a`. |
-|  | Any address in an `&'b X` must exist at least as long as any in an `&'a Y`. |
+| `S<'a> {}` | 标明 `S` 会包含{{ note( note="*") }}至少一个地址（如引用）。 |
+|  | `'a` 由该结构体的使用者自动确定。 |
+|  | `'a` 会尽可能选择最小的范围。 |
+| `f<'a>(x: &'a T)`  | 标明函数会接受一个地址（如引用）。 |
+| {{ tab() }} {{ tab() }} {{ tab() }} {{ tab() }} `-> &'a S` | ……也会返回一个地址。 |
+|   | `'a` 由调用者自动确定。 |
+|   | `'a` 会尽可能选择最小的范围。 |
+|   | `'a` 会由调用方选择同时**满足输入和输出**的。 |
+|   | 最重要的是，生命周期名称会**传播借用状态**！ |
+|   | 所以当 `'a` 的结果地址被使用了之后， `'a` 的输入地址会被锁定。 |
+|   | 这里，当`let s = f(&x)` 的 `s` 存在，`x` 会被标记为“已借用”。 |
+| `<'a, 'b: 'a>` | `S<>` 和 `f<>` 里面声明的生命周期也可以有范围。 |
+|  | `<'a, 'b>` 部分表示类型至少持有两个地址。 |
+|  | `'b: 'a` 部分表示**生命周期范围**，意为 `'b` 必须不短于（**outlive**）`'a`. |
+|  | `&'b X` 中的任意地址的生存时间必须和 `&'a Y` 中的至少一样长。 |
 
 <div class="footnotes">
 
-<sup>*</sup> Technically the struct may not hold any data (e.g., when using the `'a` only for [PhantomData](https://doc.rust-lang.org/std/marker/struct.PhantomData.html) or function pointers) but still make use of the `'a` for communicating and requiring that some of its functions require reference of a certain lifetime.
+<sup>*</sup> 技术上，结构体可能不持有任何数据（比如使用 `'a` 上的 [PhantomData](https://doc.rust-lang.org/std/marker/struct.PhantomData.html) 或者函数指针），但仍然保留 `'a` 用于交流和约束函数的引用确定生命周期。
 
 </div>
 
@@ -2726,7 +2714,7 @@ When reading function or type signatures in particular:
 
 ## Unsafe, Unsound, Undefined
 
-Unsafe leads to unsound. Unsound leads to undefined. Undefined leads to the dark side of the force.
+Unsafe 导致 unsound，unsound 导致 undefined，undefined 是一切原力的阴暗面。
 
 
 <div class="tabs">
@@ -2734,13 +2722,13 @@ Unsafe leads to unsound. Unsound leads to undefined. Undefined leads to the dark
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-unsafe-1" name="tab-unsafe" checked>
-<label class="tab-label" for="tab-unsafe-1"><b>Unsafe Code</b></label>
+<label class="tab-label" for="tab-unsafe-1"><b>Unsafe 代码</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
-**Unsafe Code**
+**Unsafe 代码**
 
-- Code marked `unsafe` has special permissions, e.g., to deref raw pointers, or invoke other `unsafe` functions.
+- 标记为 `unsafe` 的代码有特权。比如，解引用裸指针，或调用其他 `unsafe` 函数。
 - Along come special **promises the author _must_ uphold to the compiler**, and the compiler _will_ trust you.
 - By itself `unsafe` code is not bad, but dangerous, and needed for FFI or exotic data structures.
 
@@ -2759,11 +2747,11 @@ unsafe fn unsafe_f(x: *mut u8) {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-unsafe-2" name="tab-unsafe" >
-<label class="tab-label" for="tab-unsafe-2"><b>Undefined Behavior</b></label>
+<label class="tab-label" for="tab-unsafe-2"><b>Undefined 行为</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
-**Undefined Behavior (UB)**
+**未定义行为 (UB)**
 - As mentioned, `unsafe` code implies [special promises](https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html) to the compiler (it wouldn't need be `unsafe` otherwise).
 - Failure to uphold any promise makes compiler produce fallacious code, execution of which leads to UB.
 - After triggering undefined behavior _anything_ can happen. Insidiously, the effects may be 1) subtle, 2) manifest far away from the site of violation or 3) be visible only under certain conditions.
@@ -2776,9 +2764,9 @@ unsafe fn unsafe_f(x: *mut u8) {
 
 ```rust
 if maybe_true() {
-   let r: &u8 = unsafe { &*ptr::null() };    // Once this runs, ENTIRE app is undefined. Even if
-} else {                                     // line seemingly didn't do anything, app might now run
-    println!("the spanish inquisition");     // both paths, corrupt database, or anything else.
+    let r: &u8 = unsafe { &*ptr::null() };   // 一旦运行，整个程序都会处于未定义状态。
+} else {                                     // 尽管这一行看似什么都没干，程序可能两条路径
+    println!("the spanish inquisition");     // 都运行了，然后破坏掉数据，或者发生别的。
 }
 ```
 </div></div></div></div></div>
@@ -2788,11 +2776,11 @@ if maybe_true() {
 <!-- NEW TAB -->
 <div class="tab">
 <input class="tab-radio" type="radio" id="tab-unsafe-3" name="tab-unsafe" >
-<label class="tab-label" for="tab-unsafe-3"><b>Unsound Code</b></label>
+<label class="tab-label" for="tab-unsafe-3"><b>Unsound 代码</b></label>
 <div class="tab-panel">
 <div class="tab-content">
 
-**Unsound Code**
+**Unsound 代码**
 - Any _safe_ Rust that could (even only theoretically) produce UB for any user input is always **unsound**.
 - As is `unsafe` code that may invoke UB on its own accord by violating above-mentioned promises.
 - Unsound code is a stability and security risk, and violates basic assumption many Rust users have.
@@ -2813,12 +2801,12 @@ fn unsound_ref<T>(x: &T) -> &u128 {      // Signature looks safe to users. Happe
 {{ tablesep() }}
 
 >
-> **Responsible use of Unsafe**
+> **负责任地使用 Unsafe**
 >
-> - Do not use `unsafe` unless you absolutely have to.
-> - Follow the [Nomicon](https://doc.rust-lang.org/nightly/nomicon/), [Unsafe Guidelines](https://rust-lang.github.io/unsafe-code-guidelines/), **always** uphold **all** safety invariants, and **never** invoke [UB](https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html).
-> - Minimize the use of `unsafe` and encapsulate it in the small, sound modules that are easy to review.
-> - Each `unsafe` unit should be accompanied by plain-text reasoning outlining its safety.
+> - 除非非用不可，不要使用 `unsafe`。
+> - 遵循[《死灵书》](https://doc.rust-lang.org/nightly/nomicon/)、[《Unsafe 指南》](https://rust-lang.github.io/unsafe-code-guidelines/)，**永远**保证**所有**的安全不变性，**绝不**引发[未定义行为](https://doc.rust-lang.org/stable/reference/behavior-considered-undefined.html)。
+> - 最小化 `unsafe` 用例，封装成易于评审的小的、优雅的模块。
+> - 每个 `unsafe` 用例应当同时提供关于其安全性的纯文本理由提要。
 
 
 
@@ -2828,14 +2816,14 @@ fn unsound_ref<T>(x: &T) -> &u128 {      // Signature looks safe to users. Happe
 
 ## API 稳定性 {#api-stability}
 
-These changes can break client code, compare [**RFC 1105**](https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md). Major changes (🔴) are **definitely breaking**, while minor changes (🟡) **might be breaking**:
+这些更改会破坏客户端代码，请比较 [**RFC 1105**](https://github.com/rust-lang/rfcs/blob/master/text/1105-api-evolution.md)。主要更改(🔴)**一定导致破坏**，一般更改(🟡)**可能导致破坏**：
 
 <div class="header-api-stability">
 
 
 {{ tablesep() }}
 
-| Crates |
+| Crate |
 |---------|
 | 🔴 Making a crate that previously compiled for _stable_ require _nightly_. |
 | 🟡 Altering use of Cargo features (e.g., adding or removing features). |
@@ -2843,14 +2831,14 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 {{ tablesep() }}
 
 
-| Modules |
+| 模块 |
 |---------|
 | 🔴 Renaming / moving / removing any public items. |
 | 🟡 Adding new public items, as this might break code that does `use your_crate::*`. |
 
 {{ tablesep() }}
 
-| Structs |
+| 结构体 |
 |---------|
 | 🔴 Adding private field when all current fields public. |
 | 🔴 Adding public field when no private field exists. |
@@ -2859,7 +2847,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 {{ tablesep() }}
 
-| Enums |
+| 枚举 |
 |---------|
 | 🔴 Adding new variants. |
 | 🔴 Adding new fields to a variant. |
@@ -2867,7 +2855,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 {{ tablesep() }}
 
-| Traits |
+| Trait |
 |---------|
 | 🔴 Adding a non-defaulted item, breaks all existing `impl T for S {}`. |
 | 🔴 Any non-trivial change to item signatures, will affect either consumers or implementors. |
@@ -2876,7 +2864,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 {{ tablesep() }}
 
-| Traits |
+| Trait |
 |---------|
 | 🔴 Implementing any "fundamental" trait, as _not_ implementing a fundamental trait already was a promise. |
 | 🟡 Implementing any non-fundamental trait; might also cause dispatch ambiguity. |
@@ -2889,14 +2877,14 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 {{ tablesep() }}
 
-| Signatures in Type Definitions |
+| 类型定义签名 |
 |---------|
 | 🔴 Tightening bounds (e.g., `<T>` to `<T: Clone>`). |
 | 🟡 Loosening bounds. |
 | 🟡 Adding defaulted type parameters. |
 | 🟡 Generalizing to generics. |
 
-| Signatures in Functions |
+| 函数签名 |
 |---------|
 | 🔴 Adding / removing arguments. |
 | 🟡 Introducing a new type parameter. |
@@ -2905,7 +2893,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 {{ tablesep() }}
 
-| Behavioral Changes |
+| 行为更改 |
 |---------|
 | 🔴 / 🟡 _Changing semantics might not cause compiler errors, but might make clients do wrong thing._ |
 
@@ -2927,7 +2915,7 @@ These changes can break client code, compare [**RFC 1105**](https://github.com/r
 
 ## 外链和服务 {#links-services}
 
-These are other great visual guides and tables.
+一些优秀的可视化图表：
 
 {{ tool(src="link_containers.png", title="Containers", url="https://docs.google.com/presentation/d/1q-c7UAyrUlM-eZyTo1pd8SZ0qwA_wYxmPZVOQkoDmH4/edit") }}
 {{ tool(src="link_railroad.png", title="Macro Railroad", url="https://lukaslueg.github.io/macro_railroad_wasm_demo/") }}
@@ -2938,14 +2926,14 @@ These are other great visual guides and tables.
 
 <div class="header-lavender">
 
-| Cheat Sheets | Description |
+| 备忘清单 | 说明 |
 |--------| -----------|
-| [Rust Learning⭐](https://github.com/ctjhoa/rust-learning) | Probably the best collection of links about learning Rust.  |
-| [Functional Jargon in Rust](https://github.com/JasonShin/functional-programming-jargon.rs) | A collection of functional programming jargon explained in Rust.  |
-| [Periodic Table of Types](http://cosmic.mearie.org/2014/01/periodic-table-of-rust-types) | How various types and references correlate. |
-| [Futures](https://rufflewind.com/img/rust-futures-cheatsheet.html) | How to construct and work with futures. |
-| [Rust Iterator Cheat Sheet](https://danielkeep.github.io/itercheat_baked.html) | Summary of iterator-related methods from `std::iter` and `itertools`. |
-| [Type-Based Rust Cheat Sheet](https://upsuper.github.io/rust-cheatsheet/) | Lists common types and how they convert. |
+| [Rust Learning⭐](https://github.com/ctjhoa/rust-learning) | 可能是学习 Rust 最好的链接合集。 |
+| [Functional Jargon in Rust](https://github.com/JasonShin/functional-programming-jargon.rs) | Rust 的函数编程术语解释合集。 |
+| [Periodic Table of Types](http://cosmic.mearie.org/2014/01/periodic-table-of-rust-types) | 解释各种类型和引用是如何联系在一起的。 |
+| [Futures](https://rufflewind.com/img/rust-futures-cheatsheet.html) | 如何使用 Future。 |
+| [Rust Iterator Cheat Sheet](https://danielkeep.github.io/itercheat_baked.html) | `std::iter` 和 `itertools` 的迭代器相关方法总结 |
+| [Type-Based Rust Cheat Sheet](https://upsuper.github.io/rust-cheatsheet/) | 常见类型和转换方法。 |
 
 </div>
 
@@ -2953,7 +2941,7 @@ These are other great visual guides and tables.
 {{ tablesep() }}
 
 
-All major Rust books developed by the community.
+多数 Rust 数据都由社区开发。
 
 
 <div class="header-lavender">
@@ -2989,7 +2977,7 @@ All major Rust books developed by the community.
 
 {{ tablesep() }}
 
-Comprehensive lookup tables for common components.
+通用组件的综合查找表。
 
 <div class="header-lavender">
 
@@ -3007,17 +2995,17 @@ Comprehensive lookup tables for common components.
 {{ tablesep() }}
 
 
-Online services which provide information or tooling.
+提供信息或工具的在线服务。
 
 <div class="header-lavender">
 
 | 服务&nbsp;⚙️ | 描述 |
 |--------| -----------|
-| [crates.io](https://crates.io/) | All 3rd party libraries for Rust. |
-| [std.rs](https://std.rs/) | Shortcut to `std` documentation. |
-| [docs.rs](https://docs.rs/) | Documentation for 3rd party libraries, automatically generated from source. |
-| [lib.rs](https://lib.rs/) | Unofficial overview of quality Rust libraries and applications. |
-| [Rust Playground](https://play.rust-lang.org/) | Try and share snippets of Rust code. |
+| [crates.io](https://crates.io/) | 所有 Rust 第三方库。 |
+| [std.rs](https://std.rs/) | `std` 文档的快捷方式。 |
+| [docs.rs](https://docs.rs/) | 第三方库的文档，由源代码自动生成。 |
+| [lib.rs](https://lib.rs/) | 非官方的 Rust 高质量库和应用程序列表。 |
+| [Rust Playground](https://play.rust-lang.org/) | 试用或者分享 Rust 代码片段的地方。 |
 
 </div>
 
@@ -3026,7 +3014,8 @@ Online services which provide information or tooling.
 
 ## 打印 PDF
 
-> Want this Rust cheat sheet as a PDF download? <a href="javascript:window.print()"><b>Generate PDF</b></a> (or select File > Print – might take 10s so) and then "Save as PDF". It looks great in both Firefox's and Chrome's PDF exports. Alternatively use the <a href="https://github.com/ralfbiedert/cheats.rs/releases/download/2020-02-08/rust_cheat_sheet.pdf"><b>cached PDF</b></a>.
+
+> 想要下载 Rust 备忘清单的 PDF？<a href="javascript:window.print()"><b>生成 PDF</b></a>（或者选择 文件 > 打印，可能要 10 秒左右）然后“保存为 PDF”。Firefox 和 Chrome 的 PDF 导出都看起来不错。也可以下载该<a href="https://github.com/ralfbiedert/cheats.rs/releases/download/2020-02-08/rust_cheat_sheet.pdf"><b>已生成的 PDF</b></a>。
 
 </div>
 
