@@ -1,11 +1,11 @@
 # ![Logo](/static/logo.png) Rust 语言备忘清单（中文翻译）
 
-[![在线阅读](/gfx/button_read-online.png)](https://cheats.rs)
-[![预览 PDF](/gfx/button_cached-pdf.png)](https://github.com/ralfbiedert/cheats.rs/releases/latest)
+[在线阅读](https://cheats.rs)
+[预览 PDF](https://github.com/kingfree/cheats.rs/releases)
 
 † PDF is only updated occasionally and mainly provided for mobile users who can't use the "Generate PDF" button on the site. Online version is generally recommended.
 
-# Background
+# 背景
 
 This is the "Rust Language Cheat Sheet". It is for users who
 * are **early Rust professionals** (experienced programmers, intermediate Rust users), and
@@ -24,7 +24,7 @@ Design guides:
 * have **memorable URL** :)
 
 
-# Building
+# 构建
 
 Built with [Zola](https://www.getzola.org/), the static site generator written in Rust. To develop locally install Zola, then run:
 
@@ -34,7 +34,7 @@ zola serve
 
 
 
-# Contributing
+# 贡献
 
 Contributions are very welcome. You can PR bug fixes (broken links, typos, ...) directly. I am happy to evolve the current concept based on feedback and demands. Feel free to open an issue and discuss.
 
@@ -62,4 +62,4 @@ Takes additional inspiration from:
 
 # Legal & License
 
-Please see [here](content/legal.md) for details.
+参见[这里](content/legal.md)。

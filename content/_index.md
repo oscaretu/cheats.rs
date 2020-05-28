@@ -3015,7 +3015,7 @@ fn unsound_ref<T>(x: &T) -> &u128 {      // Signature looks safe to users. Happe
 ## 打印 PDF
 
 
-> 想要下载 Rust 备忘清单的 PDF？<a href="javascript:window.print()"><b>生成 PDF</b></a>（或者选择 文件 > 打印，可能要 10 秒左右）然后“保存为 PDF”。Firefox 和 Chrome 的 PDF 导出都看起来不错。也可以下载该<a href="https://github.com/ralfbiedert/cheats.rs/releases/download/2020-02-08/rust_cheat_sheet.pdf"><b>已生成的 PDF</b></a>。
+> 想要下载 Rust 备忘清单的 PDF？<a href="javascript:window.print()"><b>生成 PDF</b></a>（或者选择 文件 > 打印，可能要 10 秒左右）然后“保存为 PDF”。Firefox 和 Chrome 的 PDF 导出都看起来不错。也可以下载该<a href="https://github.com/kingfree/cheats.rs/releases/download/2020-5-29/rust-cheet-sheet-cn.pdf"><b>已生成的 PDF</b></a>。
 
 </div>
 
