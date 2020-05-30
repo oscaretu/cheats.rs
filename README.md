@@ -1,6 +1,7 @@
 # ![Logo](/static/logo.png) Rust 语言备忘清单（中文翻译）
 
-[在线阅读](https://cheats.rs)
+[cheats.rs](https://cheats.rs)
+[在线阅读](http://cheats.rs.kingfree.moe)
 [预览 PDF](https://github.com/kingfree/cheats.rs/releases)
 
 † PDF is only updated occasionally and mainly provided for mobile users who can't use the "Generate PDF" button on the site. Online version is generally recommended.

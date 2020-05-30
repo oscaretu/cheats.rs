@@ -1,4 +1,4 @@
 # The URL the site will be built for
-base_url = "https://cheats.rs"
+base_url = "http://cheats.rs.kingfree.moe"
 title = "Rust 语言备忘清单"
 compile_sass = true
